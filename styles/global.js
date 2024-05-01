@@ -1,8 +1,8 @@
 import { StyleSheet } from "react-native";
-import { useTheme } from "../context/theme";
+import { useMyTheme } from "../context/mytheme";
 
 export function GlobalStyles() {
-  const { isLargeText } = useTheme();
+  const { isLargeText } = useMyTheme();
 
   const styles = StyleSheet.create({
     text: {

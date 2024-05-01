@@ -1,17 +1,16 @@
-import { Text, Switch, View, StyleSheet,FlatList } from "react-native";
+import { Text, Switch, View, StyleSheet } from "react-native";
 import { useState } from "react";
 import { GlobalLayout } from "../components/Layout";
-import { useTheme } from "../context/theme";
-import { GlobalStyles } from "../styles/global";
-import { FontAwesome5 } from "@expo/vector-icons";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Box, Center, Heading, ScrollView, Stack, VStack, HStack, AspectRatio, Image, Button, Icon, IconButton } from "native-base";
+import { Ionicons } from "@expo/vector-icons";
+import { AntDesign } from '@expo/vector-icons';
+
 
 
 
 
 export default function CategoryScreen() {
-  const { isLargeText, setIsLargeText } = useTheme();
-  const globalStyles = GlobalStyles();
+
 
   const data = [
     {
@@ -26,59 +25,38 @@ export default function CategoryScreen() {
       id: '58694a0f-3da1-471f-bd96-145571e29d72',
       title: 'Third Item',
     },
+    {
+      id: '68694a0f-3da1-471f-bd96-145571e29d72',
+      title: 'four Item',
+    },
   ];
 
-  const renderItem = ({item}) => (
-    <View style={styles.card}>
-      <View
-        style={{
-          flex: 3,
-          padding: 20,
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}>
-        <Text>{item.title}</Text>
-        <View style={styles.iconsContainer}>
-        <Icon
-          size={25}
-          color="#0096FF"
-          name="square-edit-outline"
-          onPress={() => handleUpdate(item)}
-        />
-        <Icon
-          size={25}
-          color="#D11A2A"
-          name="delete"
-          onPress={() => handleDelete(item.id)}
-        />
-      </View>
-      </View>
+    return (
+      <Center>
+        {/* <Heading size="md">column</Heading> */}
+        {data.map((item) => (
+          <VStack display="flex" key={item.id} mb="2.5" mt="1.5" direction="column" space={1}>
+            <Center display="flex" size="16" w="300px" h="50px" bg="primary.400" rounded="md" _text={{
+              color: 'warmGray.50',
+              fontWeight: 'medium'
+            }} shadow={'5'}>
+              <HStack>
+                <Text>{item.title}</Text>
+                <IconButton icon={<Icon as={AntDesign} name="edit" size="sm" />} />
+                <IconButton icon={<Icon as={AntDesign} name="delete" size="sm" />} />
+              </HStack>
+            </Center>
 
-    </View>
-  );
-
-  return (
-    <GlobalLayout>
-      <View style={styles.view}>
-        <FlatList
-                style={{marginTop: 5}}
-                data={data}
-                keyExtractor={item => item.id}
-                renderItem={renderItem}
-              />
-      </View>
-     
-      <View>
-     
-      </View>
-    </GlobalLayout>
-  );
-}
-
-const styles = StyleSheet.create({
-  view: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
+          </VStack>
+        ))}
+      </Center>
+        
+    );
+  }
   
-});
+  const styles = StyleSheet.create({
+    view: {
+      flexDirection: "row",
+      alignItems: "center",
+    },
+  });

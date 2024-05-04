@@ -7,16 +7,30 @@ import { MyThemeProvider } from "./context/mytheme";
 import CategoryScreen from "./screens/CategoryScreen";
 import AddTransactionScreen from "./screens/AddTransactionScreen";
 import HistoryScreen from "./screens/HistoryScreen";
+import SplashScreen from "./screens/SplashScreen";
+import LoginScreen from "./screens/LoginScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 import { NativeBaseProvider } from 'native-base';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createContext, useContext } from 'react';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
-export default function App() {
+const StackNavigator = () => {
   return (
-    <NativeBaseProvider>
-      <NavigationContainer>
-        <MyThemeProvider>
-        <Tab.Navigator
+    <Stack.Navigator screenOptions={{headerShown: false}}>
+      {/* <Stack.Screen name="Splash" component={SplashScreen} /> */}
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="Home" component={TabsNavigator} />
+    </Stack.Navigator>
+  );
+}
+
+const TabsNavigator = () => {
+  return (
+    <Tab.Navigator
           screenOptions={({ route }) => {
             return {
               tabBarIcon: ({ color, size }) => {
@@ -48,6 +62,22 @@ export default function App() {
           <Tab.Screen name="Add" component={AddTransactionScreen} />
           <Tab.Screen name="History" component={HistoryScreen} />
         </Tab.Navigator>
+  );
+};
+
+
+export default function App() {
+
+  const AuthContext = createContext();
+  
+  const isAuthenticated = false;
+
+
+  return (
+    <NativeBaseProvider>
+      <NavigationContainer>
+        <MyThemeProvider>
+          <StackNavigator />
         </MyThemeProvider>
       </NavigationContainer>
     </NativeBaseProvider>

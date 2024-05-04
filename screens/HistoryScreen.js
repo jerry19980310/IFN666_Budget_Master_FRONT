@@ -5,10 +5,6 @@ import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, ScrollV
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import TabViewExample from "../components/TabView";
-
-
-
 
 
 export default function HistoryScreen() {

@@ -1,53 +1,49 @@
 import { Text, Switch, View, StyleSheet, Platform } from "react-native";
+import axios from "axios";
+import dayjs from "dayjs";
 import { useState, useEffect } from "react";
-import { GlobalLayout } from "../components/Layout";
-import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, ScrollView, Stack, VStack, HStack, Heading, Button, Icon, IconButton } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
+import { Center, Input, ScrollView, VStack, HStack, IconButton } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 
 export default function HistoryScreen() {
 
-  const [type, setType] = useState(null);
+  const [dataTransactions, setDataTransactions] = useState([]);
+  const [transactionID, setTransactionID] = useState(0);
+  const [isDelete, setIsDelete] = useState(false);
 
-    const [date, setDate] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(false);
-  
+  const fetchTransaction = async () => {
+    try {
+      const transaction = await axios.get(`http://10.0.2.2:3000/api/transaction/1`);
+      setDataTransactions(transaction.data.transactions);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+      alert("Cannot connent database. Please try again later.");
+    }
+  };
 
-
-  const data_Category = [
-    {
-      id: '1',
-      title: 'Transport',
-    },
-    {
-      id: '2',
-      title: 'Food',
-    },
-    {
-      id: '3',
-      title: 'Education',
-    },
-    {
-      id: '4',
-      title: 'Work out',
-    },
-  ];
-
-  const [money, setMoney] = useState(0);
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowPicker(Platform.OS === 'ios'); // Close picker on iOS after selecting date
-    setDate(currentDate);
+  const deleteCategory = async () => {
+    try {
+      const response = await axios.delete(`http://10.0.2.2:3000/api/transaction/delete/${transactionID}`);
+      console.log(response.data);
+      fetchTransaction();
+      setIsDelete(false);
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
   };
 
   useEffect(() => {
-    // Reset showPicker state when date changes
-    onChange();
-    // setShowPicker(false);
-  }, [date]);
+    fetchTransaction();
+  }, []);
+
+  useEffect(() => {
+
+    if (isDelete) {
+      deleteCategory();
+    }
+  }, [isDelete]);
 
     return (
       <VStack>
@@ -63,13 +59,24 @@ export default function HistoryScreen() {
         </HStack>
         <ScrollView>
           <VStack space={4} alignItems="center">
-            <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3} > Transaction1 </Center>
-            <Center w="64" h="20" bg="indigo.500" rounded="md" shadow={3} > Transaction2 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Transaction3 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Transaction4 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Transaction5 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Transaction6 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Transaction7 </Center>
+          { dataTransactions.map((transaction) => (
+            <Center key={transaction.ID} w="100%" h="20" bg="indigo.300" rounded="md" shadow={3} >
+              <HStack space={3} justifyContent="space-between">
+                <Text>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
+                <Text>{transaction.amount}</Text>
+                <Text>{transaction.note}</Text>
+                <Text>{transaction.category}</Text>
+                <IconButton
+                  icon={<AntDesign name="edit" size={24} color="black" />}
+                  onPress={() => alert("Modify transaction")}
+                />
+                <IconButton
+                  icon={<AntDesign name="delete" size={24} color="black" />}
+                  onPress={() => {setTransactionID(transaction.ID); setIsDelete(true);}}
+                />
+              </HStack>
+            </Center>
+          ))}
           </VStack>
         </ScrollView>
       </VStack>

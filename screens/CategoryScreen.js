@@ -1,8 +1,6 @@
-import { Text, Switch, View, StyleSheet } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import axios from "axios";
-import { useState, useEffect } from "react";
-import { GlobalLayout } from "../components/Layout";
-import { Box, Center, Heading, ScrollView, Stack, VStack, HStack, AspectRatio, Image, Button, Icon, IconButton } from "native-base";
+import { Center, ScrollView, VStack, HStack, Button, Icon, IconButton } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 

@@ -1,10 +1,8 @@
-import { Text, Switch, View, StyleSheet, Platform } from "react-native";
+import { Text, StyleSheet, Platform } from "react-native";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
-import { GlobalLayout } from "../components/Layout";
-import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, ScrollView, Stack, VStack, HStack, Heading, Button, Icon, CheckIcon, Select } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
+import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, Stack, Heading, Button, Icon, CheckIcon, Select } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 

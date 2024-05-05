@@ -1,7 +1,9 @@
 import { Text, Switch, View, StyleSheet, Platform } from "react-native";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import dayjs from "dayjs";
 import { GlobalLayout } from "../components/Layout";
-import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, ScrollView, Stack, VStack, HStack, Heading, Button, Icon, IconButton } from "native-base";
+import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, ScrollView, Stack, VStack, HStack, Heading, Button, Icon, CheckIcon, Select } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -12,33 +14,44 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function TransactionScreen() {
 
-  const [type, setType] = useState(null);
-
-    const [date, setDate] = useState(new Date());
-    const [showPicker, setShowPicker] = useState(false);
-  
-
-
-  const data_Category = [
-    {
-      id: '1',
-      title: 'Transport',
-    },
-    {
-      id: '2',
-      title: 'Food',
-    },
-    {
-      id: '3',
-      title: 'Education',
-    },
-    {
-      id: '4',
-      title: 'Work out',
-    },
-  ];
-
+  const [category, setCategory] = useState('');
+  const [dataCategory, setDataCategories] = useState([]);
   const [money, setMoney] = useState(0);
+  const [note, setNote] = useState('');
+  const [date, setDate] = useState(new Date());
+  const [showPicker, setShowPicker] = useState(false);
+  const [isSave, setIsSave] = useState(false);
+
+  const fetchCategory = async () => {
+    try {
+      const category = await axios.get(`http://10.0.2.2:3000/api/category/1`);
+      setDataCategories(category.data.categories);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+      alert("Cannot connent database. Please try again later.");
+    }
+  };
+
+  const newTransaction = async () => {
+    try {
+      const response = await axios.post('http://10.0.2.2:3000/api/transaction/create', {
+        amount: money,
+        user_id: '1',
+        date: dayjs(date).format('YYYY-MM-DD'),
+        note: note,
+        category: category
+      });
+      setIsSave(false);
+      setCategory('');
+      setMoney(0);
+      setNote('');
+      setDate(new Date());
+      alert("Add transaction successfully!");
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+  };
+  
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -47,10 +60,18 @@ export default function TransactionScreen() {
   };
 
   useEffect(() => {
+    fetchCategory();
+  },[]);
+
+  useEffect(() => {
     // Reset showPicker state when date changes
     onChange();
     // setShowPicker(false);
-  }, [date]);
+
+    if(isSave) {
+      newTransaction();
+    }
+  }, [date, isSave]);
 
     return (
       <Center>
@@ -63,15 +84,20 @@ export default function TransactionScreen() {
         <Input w={{
         base: "70%",
         md: "100%"
-      }} placeholder="" />
+      }} placeholder="" onChangeText={v => setMoney(v)} value={money} />
         <InputRightAddon children={"AUD"} />
       </InputGroup>
       </Box>
       <Box w="75%" maxW="300px" mx="auto">
       <Heading size="md">Category</Heading>
-      {data_Category.map((item) => (
-        <Button key={item.id} onPress={() => setType(item.title)} size="md" >{item.title}</Button>
-      ))}
+      <Select selectedValue={category} minWidth="200" accessibilityLabel="Choose Category" placeholder="Choose Category" _selectedItem={{
+        bg: "teal.600",
+        endIcon: <CheckIcon size="5" />
+      }} mt={1} onValueChange={itemValue => setCategory(itemValue)}>
+        {dataCategory.map((item) => (
+          <Select.Item key={item.ID} label={item.name} value={item.name} />
+        ))}
+        </Select>
       <Heading size="md">Date</Heading>
       </Box>
       <Box w="75%" mx="auto">
@@ -90,10 +116,10 @@ export default function TransactionScreen() {
       </Box>
       <Heading size="md">Note</Heading>
       <Box w="75%" maxW="300px" mx="auto">
-      <Input variant="outline" placeholder="" />
+      <Input variant="outline" placeholder="" onChangeText={v => setNote(v)} value={note} />
         </Box>
         <Box w="75%" maxW="300px" mx="auto">
-        <Button leftIcon={<Icon as={AntDesign} name="save" size="sm" />}>
+        <Button leftIcon={<Icon as={AntDesign} name="save" size="sm" />} onPress={() => setIsSave(true) } >
         Save
       </Button>
         

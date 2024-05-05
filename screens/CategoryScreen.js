@@ -60,7 +60,7 @@ export default function CategoryScreen() {
       setDataCategories(category.data.categories);
     } catch (error) {
       console.error("Error fetching data: ", error);
-      alert("No image on that date. Please try again later.");
+      alert("Cannot connent database. Please try again later.");
     }
   };
 

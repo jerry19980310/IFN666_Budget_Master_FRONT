@@ -9,6 +9,10 @@ import { AntDesign } from '@expo/vector-icons';
 export default function CategoryScreen() {
   const [dataCategory, setDataCategories] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
+  const [isModify, setIsModify] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const [categoryID, setcategoryID] = useState(0);
+  
 
   const createCategory = async () => {
     try {
@@ -24,10 +28,35 @@ export default function CategoryScreen() {
     }
   };
 
+  const deleteCategory = async () => {
+    try {
+      const response = await axios.delete(`http://10.0.2.2:3000/api/category/delete/${categoryID}`);
+      console.log(response.data);
+      fetchCategory();
+      setIsDelete(false);
+    } catch (error) {
+      console.error('Error posting data:', error);
+    }
+  };
+
+  const updateCategory = async () => {
+    console.log(categoryID);
+    try {
+      const response = await axios.put(`http://10.0.2.2:3000/api/category/modify/${categoryID}`, {
+        name: 'Play'
+      });
+      console.log(response.data);
+      fetchCategory();
+      setIsModify(false);
+    } catch (error) {
+      console.error('Error puting data:', error);
+    }
+  };
+
   const fetchCategory = async () => {
     try {
       const category = await axios.get(`http://10.0.2.2:3000/api/category/1`);
-      console.log("category.data: ", category.data);
+      console.log("category.data: ", category.data.categories);
       setDataCategories(category.data.categories);
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -45,7 +74,16 @@ export default function CategoryScreen() {
       createCategory();
     }
 
-  }, [isCreate]);
+    if(isModify === true){
+      updateCategory();
+    }
+
+    if(isDelete === true){
+      deleteCategory();
+    }
+
+  }, [isCreate, isModify, isDelete]);
+
 
 
   return (
@@ -53,15 +91,15 @@ export default function CategoryScreen() {
       {/* <Heading size="md">column</Heading> */}
       <ScrollView>
       {dataCategory.map((item) => (
-        <VStack display="flex" key={item.id} mb="2.5" mt="1.5" direction="column" space={1}>
+        <VStack display="flex" key={item.ID} mb="2.5" mt="1.5" direction="column" space={1}>
           <Center display="flex" size="16" w="300px" h="50px" bg="primary.400" rounded="md" _text={{
             color: 'warmGray.50',
             fontWeight: 'medium'
           }} shadow={'5'}>
             <HStack>
               <Text>{item.name}</Text>
-              <IconButton icon={<Icon as={AntDesign} name="edit" size="sm" />} />
-              <IconButton icon={<Icon as={AntDesign} name="delete" size="sm" />} />
+              <IconButton icon={<Icon as={AntDesign} name="edit" size="sm" />} onPress={() => { setcategoryID(item.ID); setIsModify(true); }} />
+              <IconButton icon={<Icon as={AntDesign} name="delete" size="sm" />} onPress={() => { setcategoryID(item.ID); setIsDelete(true); }}/>
             </HStack>
           </Center>
         </VStack>

@@ -53,6 +53,7 @@ export default function TransactionScreen() {
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
+    console.log(currentDate);
     setShowPicker(Platform.OS === 'ios'); // Close picker on iOS after selecting date
     setDate(currentDate);
   };
@@ -62,9 +63,8 @@ export default function TransactionScreen() {
   },[]);
 
   useEffect(() => {
-    // Reset showPicker state when date changes
+    
     onChange();
-    // setShowPicker(false);
 
     if(isSave) {
       newTransaction();

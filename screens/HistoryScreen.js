@@ -1,17 +1,23 @@
 import { Text, Switch, View, StyleSheet, Platform } from "react-native";
 import axios from "axios";
 import dayjs from "dayjs";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Center, Input, ScrollView, VStack, HStack, IconButton } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
+import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 
 
 export default function HistoryScreen() {
 
+  
+
   const [dataTransactions, setDataTransactions] = useState([]);
   const [transactionID, setTransactionID] = useState(0);
   const [isDelete, setIsDelete] = useState(false);
+  const [isModify, setIsModify] = useState(false);
+  const [transactions, setTransactions] = useState({});
 
   const fetchTransaction = async () => {
     try {
@@ -34,6 +40,13 @@ export default function HistoryScreen() {
     }
   };
 
+  const navigation = useNavigation();
+
+  const handleModifyTransaction = () => {
+    // Navigate to the transaction screen with necessary data
+    navigation.navigate("ModifyTransaction", { transactions });
+  };
+
   useEffect(() => {
     fetchTransaction();
   }, []);
@@ -43,7 +56,18 @@ export default function HistoryScreen() {
     if (isDelete) {
       deleteCategory();
     }
-  }, [isDelete]);
+
+    if (isModify) {
+      handleModifyTransaction();
+      setIsModify(false);
+    }
+  }, [isDelete, isModify]);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTransaction();
+    }, [])
+  );
 
     return (
       <VStack>
@@ -59,6 +83,12 @@ export default function HistoryScreen() {
         </HStack>
         <ScrollView>
           <VStack space={4} alignItems="center">
+          <HStack space={3} justifyContent="space-between">
+          <Text>date</Text>
+                <Text>amount</Text>
+                <Text>note</Text>
+                <Text>category</Text>
+                </HStack>
           { dataTransactions.map((transaction) => (
             <Center key={transaction.ID} w="100%" h="20" bg="indigo.300" rounded="md" shadow={3} >
               <HStack space={3} justifyContent="space-between">
@@ -68,7 +98,7 @@ export default function HistoryScreen() {
                 <Text>{transaction.category}</Text>
                 <IconButton
                   icon={<AntDesign name="edit" size={24} color="black" />}
-                  onPress={() => alert("Modify transaction")}
+                  onPress={() => {setTransactions(transaction); setIsModify(true); }}
                 />
                 <IconButton
                   icon={<AntDesign name="delete" size={24} color="black" />}

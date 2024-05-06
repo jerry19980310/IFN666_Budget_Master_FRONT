@@ -7,6 +7,7 @@ import { MyThemeProvider } from "./context/mytheme";
 import CategoryScreen from "./screens/CategoryScreen";
 import AddTransactionScreen from "./screens/AddTransactionScreen";
 import HistoryScreen from "./screens/HistoryScreen";
+import ModifyTransactionScreen from "./screens/ModifyTransactionScreen";
 import SplashScreen from "./screens/SplashScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
@@ -19,11 +20,12 @@ const Stack = createStackNavigator();
 
 const StackNavigator = () => {
   return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
+    <Stack.Navigator >
       {/* <Stack.Screen name="Splash" component={SplashScreen} /> */}
-      <Stack.Screen name="Login" component={LoginScreen} />
-      <Stack.Screen name="SignUp" component={SignUpScreen} />
-      <Stack.Screen name="Home" component={TabsNavigator} />
+      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
+      <Stack.Screen name="Home" component={TabsNavigator} options={{headerShown: false}}/>
+      <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
     </Stack.Navigator>
   );
 }
@@ -43,7 +45,7 @@ const TabsNavigator = () => {
                 else if (route.name === "Category") {
                   iconName = "book";
                 }
-                else if (route.name === "Add") {
+                else if (route.name === "Transaction") {
                   iconName = "plus";
                 }
                 else if (route.name === "History") {
@@ -59,7 +61,7 @@ const TabsNavigator = () => {
           <Tab.Screen name="Home" component={HoneScreen} />
           <Tab.Screen name="Settings" component={SettingsScreen} />
           <Tab.Screen name="Category" component={CategoryScreen} />
-          <Tab.Screen name="Add" component={AddTransactionScreen} />
+          <Tab.Screen name="Transaction" component={AddTransactionScreen} />
           <Tab.Screen name="History" component={HistoryScreen} />
         </Tab.Navigator>
   );

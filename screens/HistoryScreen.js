@@ -93,7 +93,7 @@ export default function HistoryScreen() {
             <Center key={transaction.ID} w="100%" h="20" bg="indigo.300" rounded="md" shadow={3} >
               <HStack space={3} justifyContent="space-between">
                 <Text>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
-                <Text>{transaction.amount}</Text>
+                <Text>${transaction.amount}</Text>
                 <Text>{transaction.note}</Text>
                 <Text>{transaction.category}</Text>
                 <IconButton

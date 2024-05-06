@@ -14,7 +14,7 @@ export default function TransactionScreen() {
 
   const [category, setCategory] = useState('');
   const [dataCategory, setDataCategories] = useState([]);
-  const [money, setMoney] = useState(0);
+  const [money, setMoney] = useState('');
   const [note, setNote] = useState('');
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -41,19 +41,18 @@ export default function TransactionScreen() {
       });
       setIsSave(false);
       setCategory('');
-      setMoney(0);
+      setMoney('');
       setNote('');
       setDate(new Date());
       alert("Add transaction successfully!");
     } catch (error) {
-      console.error('Error posting data:', error);
+      alert('Error posting data. Please try again later.');
     }
   };
   
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    console.log(currentDate);
     setShowPicker(Platform.OS === 'ios'); // Close picker on iOS after selecting date
     setDate(currentDate);
   };
@@ -82,7 +81,7 @@ export default function TransactionScreen() {
         <Input w={{
         base: "70%",
         md: "100%"
-      }} placeholder="" onChangeText={v => setMoney(v)} value={money} />
+      }} placeholder="" onChangeText={v => setMoney(v)} value={money} keyboardType='numeric'/>
         <InputRightAddon children={"AUD"} />
       </InputGroup>
       </Box>

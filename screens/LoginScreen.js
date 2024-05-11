@@ -28,8 +28,11 @@ const LoginScreen = () => {
       });
 
       const token = response.data.token;
+      console.log(token);
 
       const decode = jwtDecode(token);
+
+      console.log(decode);
 
       await AsyncStorage.setItem('jwtToken', response.data.token);
       await AsyncStorage.setItem('userId', JSON.stringify(decode.tokenPayload.userId));

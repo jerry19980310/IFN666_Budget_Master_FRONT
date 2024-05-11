@@ -72,7 +72,6 @@ export default function HistoryScreen() {
       return;
     }
     const filtered = dataTransactions.filter((transaction) => { 
-      console.log(dayjs(transaction.date).format("MM"));
       return dayjs(transaction.date).format("YYYY") === year && dayjs(transaction.date).format("MM") === String(month).padStart(2, '0'); //handle 1 digit month
     });
     setFilterTransactions(filtered);
@@ -113,11 +112,11 @@ export default function HistoryScreen() {
           <Input w={{
             base: "25%",
             md: "25%"
-          }} variant="outline" placeholder="Year" onChangeText={v => setYear(v)} value={year} />
+          }} variant="outline" placeholder="Year" onChangeText={v => setYear(v)} value={year} keyboardType='numeric'/>
           <Input w={{
             base: "25%",
             md: "25%"
-          }} variant="outline" placeholder="Month" onChangeText={v => setMonth(v)} value={month}/>
+          }} variant="outline" placeholder="Month" onChangeText={v => setMonth(v)} value={month} keyboardType='numeric'/>
         </HStack>
         <ScrollView>
           <VStack space={4} alignItems="center">

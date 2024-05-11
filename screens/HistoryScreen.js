@@ -12,13 +12,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function HistoryScreen() {
 
-  
-
   const [dataTransactions, setDataTransactions] = useState([]);
+  const [filterTransactions, setFilterTransactions] = useState([]);
   const [transactionID, setTransactionID] = useState(0);
   const [isDelete, setIsDelete] = useState(false);
   const [isModify, setIsModify] = useState(false);
   const [transactions, setTransactions] = useState({});
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
 
   const fetchTransaction = async () => {
     const user_id = await AsyncStorage.getItem('userId');
@@ -32,6 +33,8 @@ export default function HistoryScreen() {
     try {
       const transaction = await axios.get(`http://10.0.2.2:3000/api/transaction/${user_id}`, {headers});
       setDataTransactions(transaction.data.transactions);
+      setFilterTransactions(transaction.data.transactions);
+      console.log(transaction.data.transactions);
     } catch (error) {
       console.error("Error fetching data: ", error);
       alert("Cannot connent database. Please try again later.");
@@ -62,6 +65,19 @@ export default function HistoryScreen() {
     navigation.navigate("ModifyTransaction", { transactions });
   };
 
+  const handlefilter = () => {
+
+    if (!year || !month) {
+      setFilterTransactions(dataTransactions);
+      return;
+    }
+    const filtered = dataTransactions.filter((transaction) => { 
+      console.log(dayjs(transaction.date).format("MM"));
+      return dayjs(transaction.date).format("YYYY") === year && dayjs(transaction.date).format("MM") === String(month).padStart(2, '0'); //handle 1 digit month
+    });
+    setFilterTransactions(filtered);
+  }
+
   useEffect(() => {
     fetchTransaction();
   }, []);
@@ -81,13 +97,15 @@ export default function HistoryScreen() {
   useFocusEffect(
     useCallback(() => {
       fetchTransaction();
+      setYear('');
+      setMonth('');
     }, [])
   );
 
 
   useEffect(() => {
-    
-  }, []);
+    handlefilter();    
+  }, [year, month]);
 
     return (
       <VStack>
@@ -95,11 +113,11 @@ export default function HistoryScreen() {
           <Input w={{
             base: "25%",
             md: "25%"
-          }} variant="outline" placeholder="Year" />
+          }} variant="outline" placeholder="Year" onChangeText={v => setYear(v)} value={year} />
           <Input w={{
             base: "25%",
             md: "25%"
-          }} variant="outline" placeholder="Month" />
+          }} variant="outline" placeholder="Month" onChangeText={v => setMonth(v)} value={month}/>
         </HStack>
         <ScrollView>
           <VStack space={4} alignItems="center">
@@ -109,7 +127,7 @@ export default function HistoryScreen() {
                 <Text>note</Text>
                 <Text>category</Text>
                 </HStack>
-          { dataTransactions.map((transaction) => (
+          { filterTransactions.map((transaction) => (
             <Center key={transaction.ID} w="100%" h="20" bg="indigo.300" rounded="md" shadow={3} >
               <HStack space={3} justifyContent="space-between">
                 <Text>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>

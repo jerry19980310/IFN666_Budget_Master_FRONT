@@ -6,6 +6,7 @@ import { Center, Input, ScrollView, VStack, HStack, IconButton } from "native-ba
 import { AntDesign } from '@expo/vector-icons';
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -20,8 +21,16 @@ export default function HistoryScreen() {
   const [transactions, setTransactions] = useState({});
 
   const fetchTransaction = async () => {
+    const user_id = await AsyncStorage.getItem('userId');
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
+
     try {
-      const transaction = await axios.get(`http://10.0.2.2:3000/api/transaction/1`);
+      const transaction = await axios.get(`http://10.0.2.2:3000/api/transaction/${user_id}`, {headers});
       setDataTransactions(transaction.data.transactions);
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -30,8 +39,14 @@ export default function HistoryScreen() {
   };
 
   const deleteCategory = async () => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
     try {
-      const response = await axios.delete(`http://10.0.2.2:3000/api/transaction/delete/${transactionID}`);
+      const response = await axios.delete(`http://10.0.2.2:3000/api/transaction/delete/${transactionID}`, {headers});
       console.log(response.data);
       fetchTransaction();
       setIsDelete(false);
@@ -68,6 +83,11 @@ export default function HistoryScreen() {
       fetchTransaction();
     }, [])
   );
+
+
+  useEffect(() => {
+    
+  }, []);
 
     return (
       <VStack>

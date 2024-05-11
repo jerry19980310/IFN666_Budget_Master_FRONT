@@ -13,7 +13,8 @@ import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import { NativeBaseProvider } from 'native-base';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect } from 'react';
+import { Alert, BackHandler } from 'react-native';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -24,7 +25,7 @@ const StackNavigator = () => {
       <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
       <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="Home" component={TabsNavigator} options={{headerShown: false}}/>
+      <Stack.Screen name="Tabview" component={TabsNavigator} options={{headerShown: false}}/>
       <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
     </Stack.Navigator>
   );
@@ -59,10 +60,11 @@ const TabsNavigator = () => {
           }}
         >
           <Tab.Screen name="Home" component={HoneScreen} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
-          <Tab.Screen name="Category" component={CategoryScreen} />
           <Tab.Screen name="Transaction" component={AddTransactionScreen} />
           <Tab.Screen name="History" component={HistoryScreen} />
+          <Tab.Screen name="Settings" component={SettingsScreen} />
+          {/* <Tab.Screen name="Category" component={CategoryScreen} /> */}
+          
         </Tab.Navigator>
   );
 };
@@ -73,6 +75,27 @@ export default function App() {
   const AuthContext = createContext();
   
   const isAuthenticated = false;
+
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Hold on!', 'Are you sure you want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+      ]);
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+
+    return () => backHandler.remove();
+  }, []);
 
 
   return (

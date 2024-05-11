@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, Stack, Heading, Button, Icon, CheckIcon, Select } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -20,9 +21,17 @@ export default function TransactionScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [isSave, setIsSave] = useState(false);
 
+
+
   const fetchCategory = async () => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
     try {
-      const category = await axios.get(`http://10.0.2.2:3000/api/category/1`);
+      const category = await axios.get(`http://10.0.2.2:3000/api/category`, {headers});
       setDataCategories(category.data.categories);
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -31,14 +40,21 @@ export default function TransactionScreen() {
   };
 
   const newTransaction = async () => {
+    const user_id = await AsyncStorage.getItem('userId');
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
     try {
       const response = await axios.post('http://10.0.2.2:3000/api/transaction/create', {
         amount: money,
-        user_id: '1',
+        user_id: user_id,
         date: dayjs(date).format('YYYY-MM-DD'),
         note: note,
         category: category
-      });
+      }, {headers});
       setIsSave(false);
       setCategory('');
       setMoney('');

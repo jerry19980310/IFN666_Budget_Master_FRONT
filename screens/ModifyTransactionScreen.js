@@ -7,6 +7,8 @@ import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, Stack, 
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 
 
@@ -24,6 +26,14 @@ export default function ModifyTransactionScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
 
+  const user_id = AsyncStorage.getItem('userId');
+  const token = AsyncStorage.getItem('jwtToken');
+  const headers = {
+    accept: "application/json",
+    "Content-Type" : "application/json",
+    Authorization: `Bearer ${token}`
+  }
+
 
   const navigation = useNavigation();
 
@@ -35,8 +45,14 @@ export default function ModifyTransactionScreen() {
 
   console.log(transactions);
   const fetchCategory = async () => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
     try {
-      const category = await axios.get(`http://10.0.2.2:3000/api/category/1`);
+      const category = await axios.get(`http://10.0.2.2:3000/api/category`, {headers});
       setDataCategories(category.data.categories);
     } catch (error) {
       console.error("Error fetching data: ", error);
@@ -45,14 +61,21 @@ export default function ModifyTransactionScreen() {
   };
 
   const updateTransaction = async () => {
+    const user_id = await AsyncStorage.getItem('userId');
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
     try {
       const response = await axios.put(`http://10.0.2.2:3000/api/transaction/modify/${transactions.ID}`, {
         amount: money,
-        user_id: '1',
+        user_id: user_id,
         date: dayjs(date).format('YYYY-MM-DD'),
         note: note,
         category: category
-      });
+      }, {headers});
       handleGoBack();
       alert("Update transaction successfully!");
     } catch (error) {

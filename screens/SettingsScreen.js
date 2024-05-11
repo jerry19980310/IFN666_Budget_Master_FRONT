@@ -3,12 +3,21 @@ import { useState } from "react";
 import { GlobalLayout } from "../components/Layout";
 import { useMyTheme } from "../context/mytheme";
 import { GlobalStyles } from "../styles/global";
+import { Button } from "native-base";
+import { useNavigation } from '@react-navigation/native';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SettingsScreen() {
+
   const { isLargeText, setIsLargeText } = useMyTheme();
   const globalStyles = GlobalStyles();
+  const navigation = useNavigation();
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('jwtToken');
+    navigation.navigate('Login');
+  };
 
   return (
     <GlobalLayout>
@@ -23,6 +32,9 @@ export default function SettingsScreen() {
         />
         <Text style={globalStyles.text}>Large Text</Text>
       </View>
+      <Button onPress={handleLogout}>
+        <Text>Logout</Text>
+      </Button>
     </GlobalLayout>
   );
 }

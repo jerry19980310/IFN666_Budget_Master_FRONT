@@ -7,6 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Checkexp from "../components/CheckExp";
 
 
 
@@ -95,9 +96,18 @@ export default function HistoryScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      fetchTransaction();
-      setYear('');
-      setMonth('');
+      async function check() {
+      const isExpire = await Checkexp();
+      if(!isExpire){
+        fetchTransaction();
+        setYear('');
+        setMonth('');
+      }
+      else{
+        navigation.navigate("Login");
+      }
+    }
+    check();
     }, [])
   );
 

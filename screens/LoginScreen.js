@@ -21,8 +21,6 @@ const LoginScreen = () => {
 
   const [password, setPassword] = useState('');
 
-  const [isLogin, setIsLogin] = useState(false);
-
   const login = async () => {
 
     if(!userName || !password){
@@ -60,7 +58,7 @@ const LoginScreen = () => {
   };
 
   useEffect(() => {
-    
+
     const checkLogin = async () => {
       const token = await AsyncStorage.getItem('jwtToken');
       const userName = await AsyncStorage.getItem('username');
@@ -70,27 +68,20 @@ const LoginScreen = () => {
       }
     }
 
-    const checkexp = async () => {
-      const exp = await AsyncStorage.getItem('exp');
-      if(exp < Date.now()){
-        console.log(exp);
-        alert("Token expired, please login again");
-        await AsyncStorage.removeItem('jwtToken');
-        await AsyncStorage.removeItem('userId');
-        await AsyncStorage.removeItem('username');
-        await AsyncStorage.removeItem('exp');
+    async function check() {
+      const isExpire = await CheckExp();
+      console.log(isExpire);
+      if (isExpire) {
         navigation.navigate('Login');
         return;
       }
-      else
-      {
+      else {
         checkLogin();
       }
 
-      
     };
-    
-    checkexp();
+
+    check();
 
   }, []);
 

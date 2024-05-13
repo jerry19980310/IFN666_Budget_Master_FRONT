@@ -1,14 +1,13 @@
 import { Text, StyleSheet, Platform } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
 import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, Stack, Heading, Button, Icon, CheckIcon, Select } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
-
-
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import Checkexp from "../components/CheckExp";
 
 
 export default function TransactionScreen() {
@@ -20,6 +19,7 @@ export default function TransactionScreen() {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [isSave, setIsSave] = useState(false);
+  const navigation = useNavigation();
 
 
 
@@ -76,6 +76,21 @@ export default function TransactionScreen() {
   useEffect(() => {
     fetchCategory();
   },[]);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function check() {
+      const isExpire = await Checkexp();
+      if(!isExpire){
+        fetchCategory();
+      }
+      else {
+        navigation.navigate("Login");
+      }
+    }
+    check();
+    }, [])
+  );
 
   useEffect(() => {
     

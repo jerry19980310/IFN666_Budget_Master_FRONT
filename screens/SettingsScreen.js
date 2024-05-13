@@ -16,6 +16,9 @@ export default function SettingsScreen() {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('jwtToken');
+    await AsyncStorage.removeItem('userId');
+    await AsyncStorage.removeItem('username');
+    await AsyncStorage.removeItem('exp');
     navigation.navigate('Login');
   };
 

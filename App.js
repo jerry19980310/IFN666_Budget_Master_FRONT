@@ -16,6 +16,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createContext, useContext, useEffect } from 'react';
 import { Alert, BackHandler } from 'react-native';
 import { useState } from "react";
+import AboutPage from "./screens/AboutScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -39,6 +40,7 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Tabview" component={TabsNavigator} options={{headerShown: false}}/>
         <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
+        <Stack.Screen name="About" component={AboutPage}  options={{ title: 'About', headerShown: true}}/>
       </Stack.Navigator>
     );
   }

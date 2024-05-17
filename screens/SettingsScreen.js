@@ -22,6 +22,10 @@ export default function SettingsScreen() {
     navigation.navigate('Login');
   };
 
+  const handleAbout = async () => {
+    navigation.navigate('About');
+  };
+
   return (
     <GlobalLayout>
       <View style={styles.view}>
@@ -35,8 +39,11 @@ export default function SettingsScreen() {
         />
         <Text style={globalStyles.text}>Large Text</Text>
       </View>
+      <Button onPress={handleAbout}>
+        <Text>About</Text>
+      </Button>
       <Button onPress={handleLogout}>
-        <Text>Logout</Text>
+      <Text>Logout</Text>
       </Button>
     </GlobalLayout>
   );

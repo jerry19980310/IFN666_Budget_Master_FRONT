@@ -14,8 +14,8 @@ export default function HomeScreen() {
   const [money, setMoney] = useState(0);
   const [summarys, setSummarys] = useState([]);
   const [filtersummarys, setFilterSummarys] = useState([]);
-  const [year, setYear] = useState(new Date().getFullYear().toString());
-  const [month, setMonth] = useState((new Date().getMonth()+1).toString());
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
   const navigation = useNavigation();
   const globalStyles = GlobalStyles();
 
@@ -35,7 +35,7 @@ export default function HomeScreen() {
     try {
       const response = await axios.get(`http://10.0.2.2:3000/api/transaction/summary/${user_id}`, {headers});
       setSummarys(response.data.summary);
-      // setFilterSummarys(response.data.summary);
+      setFilterSummarys(response.data.summary);
       let mymoney = 0;
       for (let i = 0; i < response.data.summary.length; i++) {
         mymoney = mymoney + response.data.summary[i].amount;
@@ -60,7 +60,6 @@ export default function HomeScreen() {
     }
 
     const filtered = summarys.filter((summary) => { 
-      console.log(summary.Year, Number(year), summary.Month, Number(month));
       return summary.Year === Number(year) && summary.Month === Number(month);
     });
     setFilterSummarys(filtered);
@@ -75,17 +74,17 @@ export default function HomeScreen() {
 
   useEffect(() => {
     fetchSummary();
-    handlefilter();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
       async function check() {
         const isExpire = await Checkexp();
+        console.log(isExpire);
         if(!isExpire){
           fetchSummary();
-          setYear(new Date().getFullYear().toString());
-          setMonth((new Date().getMonth()+1).toString());
+          setYear('');
+          setMonth('');
         }
         else{
           navigation.navigate("Login");
@@ -129,8 +128,6 @@ export default function HomeScreen() {
           <VStack space={4} alignItems="center">
             { filtersummarys.map((summary) => (
               <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3} >
-                <Text>{summary.Year}</Text>
-                <Text>{summary.Month}</Text>
                 <Text>{summary.category}</Text>
                 <Text>{summary.amount}</Text>
               </Center>

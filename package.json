@@ -25,6 +25,7 @@
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "native-base": "^3.4.28",
+    "npm-license-crawler": "^0.2.1",
     "react": "^18.0.0",
     "react-native": "0.73.6",
     "react-native-gesture-handler": "~2.14.0",

@@ -36,7 +36,7 @@ export default function SettingsScreen() {
             await AsyncStorage.setItem("isLargeText", JSON.stringify(!isLargeText));
             setIsLargeText(!isLargeText);
           }}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          trackColor={{ false: "#767577", true: "#96B6C5" }}
         />
         <Text style={globalStyles.text}>Large Text</Text>
       </View>
@@ -51,10 +51,10 @@ export default function SettingsScreen() {
         />
         <Text style={globalStyles.text}>Bold Text</Text>
       </View>
-      <Button bg="#D8AE7E" onPress={handleAbout}>
+      <Button bg="#96B6C5" onPress={handleAbout}>
         <Text style={globalStyles.text}>About</Text>
       </Button>
-      <Button bg="#D8AE7E" onPress={handleLogout}>
+      <Button bg="#96B6C5" onPress={handleLogout}>
         <Text style={globalStyles.text}>Logout</Text>
       </Button>
     </GlobalLayout>

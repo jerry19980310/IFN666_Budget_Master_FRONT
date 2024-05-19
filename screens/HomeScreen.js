@@ -98,65 +98,71 @@ export default function HomeScreen() {
 
   return (
     <GlobalLayout>
-      <Center flex={1} px="3">
-        <VStack space={4} w="90%" maxW="400px">
-          <HStack space={3} justifyContent="center">
-            <Input 
-              w="45%" 
-              variant="outline" 
-              placeholder="Year" 
-              onChangeText={v => setYear(v)} 
-              value={year} 
-              keyboardType='numeric' 
-              style={globalStyles.text}
-            />
-            <Input 
-              w="45%" 
-              variant="outline" 
-              placeholder="Month" 
-              onChangeText={v => setMonth(v)} 
-              value={month} 
-              keyboardType='numeric' 
-              style={globalStyles.text}
-            />
-          </HStack>
-          <Center>
-            <Text  style={globalStyles.heading}>Total: $ {money.toFixed()} AUD</Text>
-          </Center>
-          <ScrollView >
-            <VStack space={4} alignItems="center">
-              {filtersummarys.map((summary, index) => (
-                <Box key={index} w="100%" bg="#D8AE7E" p="4" rounded="md" shadow={3}>
-                  <HStack justifyContent="space-between">
-                    <VStack space={2}>
-                      <HStack alignItems="center" space={3} justifyContent="space-between">
-                        <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#fff" />
-                        <Text style={globalStyles.heading} >Year: {summary.Year}</Text>
-                        <Text style={globalStyles.heading} >Month: {summary.Month}</Text>
-                      </HStack>
-                      <HStack alignItems="center">
-                        <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#fff" />
-                        <Text style={globalStyles.text}> Category: {summary.category}</Text>
-                      </HStack>
-                      <HStack alignItems="center">
-                        <Icon as={MaterialIcons} name="attach-money" size="sm" color="#fff" />
-                        <Text style={globalStyles.text}> Amount: ${summary.amount}</Text>
-                      </HStack>
-                    </VStack>
-                  </HStack>
-                </Box>
-              ))}
-            </VStack>
-          </ScrollView>
-        </VStack>
+      <HStack space={3} justifyContent="center" mt="2">
+        <Input 
+          w="45%" 
+          variant="outline"
+          placeholder="Year" 
+          onChangeText={v => setYear(v)} 
+          value={year} 
+          keyboardType='numeric' 
+          style={globalStyles.text}
+        />
+        <Input 
+          w="45%" 
+          variant="outline" 
+          placeholder="Month" 
+          onChangeText={v => setMonth(v)} 
+          value={month} 
+          keyboardType='numeric' 
+          style={globalStyles.text}
+        />
+      </HStack>
+      <Center>
+        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Total: $ {money.toFixed()} AUD</Text>
       </Center>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <VStack space={4} w="90%" maxW="400px" mx="auto">
+          <VStack space={4} alignItems="center">
+            {filtersummarys.map((summary, index) => (
+              <Box key={index} w="100%" bg="#96B6C5" p="4" rounded="md" shadow={3} >
+                <HStack justifyContent="space-between">
+                  <VStack space={2}>
+                    <HStack alignItems="center" space={3} justifyContent="space-between">
+                      <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#EEE0C9" />
+                      <Text style={[styles.summaryText, globalStyles.text]}> Year: {summary.Year}</Text>
+                      <Text style={[styles.summaryText, globalStyles.text]}> Month: {summary.Month}</Text>
+                    </HStack>
+                    <HStack alignItems="center">
+                      <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#EEE0C9" />
+                      <Text style={[styles.categoryText, globalStyles.text]}> Category: {summary.category}</Text>
+                    </HStack>
+                    <HStack alignItems="center">
+                      <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
+                      <Text style={[styles.amountText, globalStyles.text]}> Amount: ${summary.amount}</Text>
+                    </HStack>
+                  </VStack>
+                </HStack>
+              </Box>
+            ))}
+          </VStack>
+        </VStack>
+      </ScrollView>
     </GlobalLayout>
   );
 }
 
 const styles = StyleSheet.create({
   summaryText: {
-    color: "#fff",
+    color: "#001C30",
+    marginLeft: 8,
+  },
+  categoryText: {
+    color: "#176B87",
+    marginLeft: 8,
+  },
+  amountText: {
+    color: "#3C5B6F",
     marginLeft: 8,
   },
   largeText: {

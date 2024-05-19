@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Checkexp from "../components/CheckExp";
 import { GlobalStyles } from "../styles/global";
+import { GlobalLayout } from "../components/Layout";
 
 
 export default function HistoryScreen() {
@@ -120,10 +121,9 @@ export default function HistoryScreen() {
   }, [year, month]);
 
   return (
-    <Center flex={1} px="3">
-      <VStack space={4} w="90%" maxW="400px">
-        {/* <Heading size="lg" textAlign="center" style={isLargeText && styles.largeText}>Transaction History</Heading> */}
-        <HStack space={3} justifyContent="center">
+    <GlobalLayout>
+      <Center flex={1} px="3" mt="4">
+        <HStack space={3} justifyContent="center" mb="4">
           <Input
             w="45%"
             variant="outline"
@@ -143,37 +143,37 @@ export default function HistoryScreen() {
             style={globalStyles.text}
           />
         </HStack>
-        <ScrollView>
-          <VStack space={4} mt={4} alignItems="center" width="100%">
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <VStack space={4} w="90%" maxW="400px" mx="auto" alignItems="center">
             {filterTransactions.length > 0 ? (
               filterTransactions.map((transaction) => (
-                <Box key={transaction.ID} p="4" bg="#D8AE7E" rounded="md" shadow={2} mb={2} w="90%">
+                <Box key={transaction.ID} p="4" bg="#96B6C5" rounded="md" shadow={2} mb={2} w="100%">
                   <HStack justifyContent="space-between" alignItems="center">
-                    <VStack>
+                    <VStack space={2} w="70%">
                       <HStack alignItems="center" space={2}>
-                        <Icon as={MaterialIcons} name="date-range" size="sm" color="white" />
-                        <Text color="white" bold style={globalStyles.text}>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
+                        <Icon as={MaterialIcons} name="date-range" size="sm" color="#EEE0C9" />
+                        <Text style={[styles.summaryText, globalStyles.text]}>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
                       </HStack>
                       <HStack alignItems="center" space={2}>
-                        <Icon as={MaterialIcons} name="attach-money" size="sm" color="white" />
-                        <Text color="white" style={globalStyles.text}>${transaction.amount}</Text>
+                        <Icon as={MaterialIcons} name="category" size="sm" color="#EEE0C9" />
+                        <Text style={[styles.categoryText, globalStyles.text]}>{transaction.category}</Text>
                       </HStack>
                       <HStack alignItems="center" space={2}>
-                        <Icon as={MaterialIcons} name="note" size="sm" color="white" />
-                        <Text color="white" style={globalStyles.text}>{transaction.note}</Text>
+                        <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
+                        <Text style={[styles.amountText, globalStyles.text]}>${transaction.amount}</Text>
                       </HStack>
                       <HStack alignItems="center" space={2}>
-                        <Icon as={MaterialIcons} name="category" size="sm" color="white" />
-                        <Text color="white" style={globalStyles.text}>{transaction.category}</Text>
+                        <Icon as={MaterialIcons} name="note" size="sm" color="#EEE0C9" />
+                        <Text style={[styles.summaryText, globalStyles.text]}>{transaction.note}</Text>
                       </HStack>
                     </VStack>
                     <HStack space={2}>
                       <IconButton
-                        icon={<AntDesign name="edit" size={24} color="white" />}
+                        icon={<AntDesign name="edit" size={24} color="#135D66" />}
                         onPress={() => { setTransactions(transaction); setIsModify(true); }}
                       />
                       <IconButton
-                        icon={<AntDesign name="delete" size={24} color="white" />}
+                        icon={<AntDesign name="delete" size={24} color="#A91D3A" />}
                         onPress={() => { setTransactionID(transaction.ID); setIsDelete(true); }}
                       />
                     </HStack>
@@ -181,19 +181,39 @@ export default function HistoryScreen() {
                 </Box>
               ))
             ) : (
-              <Text style={globalStyles.text}>No transactions found for the selected date.</Text>
+              <Text style={[styles.summaryText, globalStyles.text]}>No transactions found for the selected date.</Text>
             )}
           </VStack>
         </ScrollView>
-      </VStack>
-    </Center>
+      </Center>
+    </GlobalLayout>
+    
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  summaryText: {
+    marginLeft: 8,
+    color: '#001C30',
+  },
   view: {
     flexDirection: "row",
     alignItems: "center",
   },
-
+  largeText: {
+    fontSize: 20,
+  },
+  amountText: {
+    color: "#3C5B6F",
+    marginLeft: 8,
+  },
+  categoryText: {
+    color: "#176B87",
+    marginLeft: 8,
+  },
 });

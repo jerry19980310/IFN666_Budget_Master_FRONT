@@ -14,12 +14,12 @@ export function GlobalLayout({ children }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F1F0E8",
   },
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    width: "90%",
+    backgroundColor: "#F1F0E8",
+    width: "100%",
     alignSelf: "center",
   },
 });

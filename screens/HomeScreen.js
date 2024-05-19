@@ -1,15 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, Alert } from "react-native";
 import { GlobalLayout } from "../components/Layout";
 import { GlobalStyles } from "../styles/global";
-import { Box, Center, HStack, Input, ScrollView, VStack, Button, Text, Icon } from "native-base";
-import PieChart from 'react-native-pie-chart'
+import { Box, Center, HStack, Input, ScrollView, VStack, Icon } from "native-base";
+// import PieChart from 'react-native-pie-chart'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Checkexp from "../components/CheckExp";
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useMyTheme } from '../context/mytheme';
 
 export default function HomeScreen() {
 
@@ -20,7 +19,7 @@ export default function HomeScreen() {
   const [month, setMonth] = useState('');
   const navigation = useNavigation();
   const globalStyles = GlobalStyles();
-  const { isLargeText } = useMyTheme();
+  // const { isLargeText } = useMyTheme();
 
   const fetchSummary = async () => {
     const user_id = await AsyncStorage.getItem('userId');
@@ -42,7 +41,7 @@ export default function HomeScreen() {
       setMoney(mymoney);
     } catch (error) {
       console.error("Error fetching data: ", error);
-      alert(error.response.data.message);
+      Alert.alert('ERROR',error.response.data.message);
     }
   };
 
@@ -109,7 +108,7 @@ export default function HomeScreen() {
               onChangeText={v => setYear(v)} 
               value={year} 
               keyboardType='numeric' 
-              style={isLargeText && styles.largeText}
+              style={globalStyles.text}
             />
             <Input 
               w="45%" 
@@ -118,11 +117,11 @@ export default function HomeScreen() {
               onChangeText={v => setMonth(v)} 
               value={month} 
               keyboardType='numeric' 
-              style={isLargeText && styles.largeText}
+              style={globalStyles.text}
             />
           </HStack>
           <Center>
-            <Text fontSize="2xl" bold style={isLargeText && styles.largeText}>Total: $ {money.toFixed()} AUD</Text>
+            <Text  style={globalStyles.heading}>Total: $ {money.toFixed()} AUD</Text>
           </Center>
           <ScrollView >
             <VStack space={4} alignItems="center">
@@ -132,16 +131,16 @@ export default function HomeScreen() {
                     <VStack space={2}>
                       <HStack alignItems="center" space={3} justifyContent="space-between">
                         <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#fff" />
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]} bold> Year: {summary.Year}</Text>
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]} bold> Month: {summary.Month}</Text>
+                        <Text style={globalStyles.heading} >Year: {summary.Year}</Text>
+                        <Text style={globalStyles.heading} >Month: {summary.Month}</Text>
                       </HStack>
                       <HStack alignItems="center">
                         <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#fff" />
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]}> Category: {summary.category}</Text>
+                        <Text style={globalStyles.text}> Category: {summary.category}</Text>
                       </HStack>
                       <HStack alignItems="center">
                         <Icon as={MaterialIcons} name="attach-money" size="sm" color="#fff" />
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]}> Amount: ${summary.amount}</Text>
+                        <Text style={globalStyles.text}> Amount: ${summary.amount}</Text>
                       </HStack>
                     </VStack>
                   </HStack>

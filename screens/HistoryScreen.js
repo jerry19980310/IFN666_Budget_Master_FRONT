@@ -1,14 +1,14 @@
-import { Text, Switch, View, StyleSheet, Platform } from "react-native";
+import { Text,  StyleSheet, Alert } from "react-native";
 import axios from "axios";
 import dayjs from "dayjs";
 import { useState, useEffect, useCallback } from "react";
-import { Center, Input, ScrollView, VStack, HStack, IconButton, Box, Button, Heading, Icon } from "native-base";
+import { Center, Input, ScrollView, VStack, HStack, IconButton, Box, Icon } from "native-base";
 import { AntDesign, MaterialIcons } from '@expo/vector-icons';
-import { NavigationContainer, useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Checkexp from "../components/CheckExp";
-import { useMyTheme } from '../context/mytheme';
+import { GlobalStyles } from "../styles/global";
 
 
 export default function HistoryScreen() {
@@ -22,7 +22,7 @@ export default function HistoryScreen() {
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
 
-  const { isLargeText } = useMyTheme();
+  const globalStyles = GlobalStyles();
 
   const fetchTransaction = async () => {
     const user_id = await AsyncStorage.getItem('userId');
@@ -37,10 +37,10 @@ export default function HistoryScreen() {
       const transaction = await axios.get(`http://10.0.2.2:3000/api/transaction/${user_id}`, {headers});
       setDataTransactions(transaction.data.transactions);
       setFilterTransactions(transaction.data.transactions);
-      console.log(transaction.data.transactions);
+      // console.log(transaction.data.transactions);
     } catch (error) {
       console.error("Error fetching data: ", error);
-      alert("Cannot connent database. Please try again later.");
+      Alert.alert('ERROR', "Cannot connent database. Please try again later.");
     }
   };
 
@@ -58,6 +58,7 @@ export default function HistoryScreen() {
       setIsDelete(false);
     } catch (error) {
       console.error('Error posting data:', error);
+      Alert.alert('ERROR', error.response.data.message);
     }
   };
 
@@ -130,7 +131,7 @@ export default function HistoryScreen() {
             onChangeText={v => setYear(v)}
             value={year}
             keyboardType='numeric'
-            style={isLargeText && styles.largeText}
+            style={globalStyles.text}
           />
           <Input
             w="45%"
@@ -139,7 +140,7 @@ export default function HistoryScreen() {
             onChangeText={v => setMonth(v)}
             value={month}
             keyboardType='numeric'
-            style={isLargeText && styles.largeText}
+            style={globalStyles.text}
           />
         </HStack>
         <ScrollView>
@@ -151,19 +152,19 @@ export default function HistoryScreen() {
                     <VStack>
                       <HStack alignItems="center" space={2}>
                         <Icon as={MaterialIcons} name="date-range" size="sm" color="white" />
-                        <Text color="white" bold style={isLargeText && styles.largeText}>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
+                        <Text color="white" bold style={globalStyles.text}>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
                       </HStack>
                       <HStack alignItems="center" space={2}>
                         <Icon as={MaterialIcons} name="attach-money" size="sm" color="white" />
-                        <Text color="white" style={isLargeText && styles.largeText}>${transaction.amount}</Text>
+                        <Text color="white" style={globalStyles.text}>${transaction.amount}</Text>
                       </HStack>
                       <HStack alignItems="center" space={2}>
                         <Icon as={MaterialIcons} name="note" size="sm" color="white" />
-                        <Text color="white" style={isLargeText && styles.largeText}>{transaction.note}</Text>
+                        <Text color="white" style={globalStyles.text}>{transaction.note}</Text>
                       </HStack>
                       <HStack alignItems="center" space={2}>
                         <Icon as={MaterialIcons} name="category" size="sm" color="white" />
-                        <Text color="white" style={isLargeText && styles.largeText}>{transaction.category}</Text>
+                        <Text color="white" style={globalStyles.text}>{transaction.category}</Text>
                       </HStack>
                     </VStack>
                     <HStack space={2}>
@@ -180,7 +181,7 @@ export default function HistoryScreen() {
                 </Box>
               ))
             ) : (
-              <Text style={isLargeText && styles.largeText}>No transactions found for the selected date.</Text>
+              <Text style={globalStyles.text}>No transactions found for the selected date.</Text>
             )}
           </VStack>
         </ScrollView>
@@ -194,7 +195,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  largeText: {
-    fontSize: 20,
-  },
+
 });

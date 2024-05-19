@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { Input, Icon, Stack, Box, Pressable, Button } from 'native-base';
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from 'axios';
-import { useMyTheme } from '../context/mytheme';
 import "core-js/stable/atob";
 import { useState } from 'react';
+import { GlobalStyles } from "../styles/global";
 
 
 
@@ -17,7 +17,7 @@ const SignUpScreen = ({ navigation }) => {
 
   const [password, setPassword] = useState('');
 
-  const { isLargeText } = useMyTheme();
+  const globalStyles = GlobalStyles();
 
   const signup = async () => {
 
@@ -32,10 +32,8 @@ const SignUpScreen = ({ navigation }) => {
         password: password
       });
 
-      console.log(response.data);
-
       if(response.data.success){
-        alert(response.data.message + ". Please login to continue");
+        Alert.alert("Remind",response.data.message + "Please login to continue.");
         setUserName('');
         setPassword('');
         navigation.navigate('Login');
@@ -44,7 +42,7 @@ const SignUpScreen = ({ navigation }) => {
 
     } catch (error) {
       
-      alert(error.response.data.message);
+      Alert.alert("ERROR",error.response.data.message);
     }
   };
 
@@ -63,7 +61,7 @@ const SignUpScreen = ({ navigation }) => {
               placeholder="Enter your Username"
               onChangeText={setUserName}
               value={userName}
-              style={isLargeText && styles.largeText || styles.input}
+              style={globalStyles.text}
             />
             <Input
               w={styles.inputWidth}
@@ -76,11 +74,11 @@ const SignUpScreen = ({ navigation }) => {
               placeholder="Password"
               onChangeText={setPassword}
               value={password}
-              style={isLargeText && styles.largeText || styles.input}
+              style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={signup} style={styles.button} _text={isLargeText && styles.largeText ||  styles.buttonText}>Sign Up</Button>
-              <Button onPress={() => navigation.navigate('Login')} style={styles.button} _text={isLargeText && styles.largeText || styles.buttonText}>Login</Button>
+              <Button onPress={signup} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
+              <Button onPress={() => navigation.navigate('Login')} style={styles.button} _text={globalStyles.text}>Login</Button>
             </View>
           </Stack>
         </Box>

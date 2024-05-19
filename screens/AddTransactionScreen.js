@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Platform } from "react-native";
+import { Text, StyleSheet, Platform, Alert } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Checkexp from "../components/CheckExp";
 import { useMyTheme } from '../context/mytheme';
+import { GlobalStyles } from "../styles/global";
 
 
 export default function TransactionScreen() {
@@ -21,7 +22,9 @@ export default function TransactionScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const navigation = useNavigation();
-  const { isLargeText } = useMyTheme();
+  // const { isLargeText } = useMyTheme();
+
+  const globalStyles = GlobalStyles();
 
 
 
@@ -37,7 +40,7 @@ export default function TransactionScreen() {
       setDataCategories(category.data.categories);
     } catch (error) {
       console.error("Error fetching data: ", error);
-      alert("Cannot connent database. Please try again later.");
+      Alert.alert('ERROR', "Cannot connent database. Please try again later.");
     }
   };
 
@@ -62,9 +65,9 @@ export default function TransactionScreen() {
       setMoney('');
       setNote('');
       setDate(new Date());
-      alert("Add transaction successfully!");
+      Alert.alert("WELL DONE","Add transaction successfully!");
     } catch (error) {
-      alert('Error posting data. Please try again later.');
+      Alert.alert("ERROR",'Error posting data. Please try again later.');
     }
   };
   
@@ -107,7 +110,7 @@ export default function TransactionScreen() {
     <Center flex={1} px="3">
       <VStack space={4} w="90%" maxW="400px">
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Amount</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Amount</Heading>
           <InputGroup>
             <InputLeftAddon children={"$"} />
             <Input
@@ -116,14 +119,14 @@ export default function TransactionScreen() {
               onChangeText={v => setMoney(v)}
               value={money}
               keyboardType="numeric"
-              style={isLargeText && styles.largeText}
+              style={globalStyles.text}
             />
             <InputRightAddon children={"AUD"} />
           </InputGroup>
         </Box>
 
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Category</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Category</Heading>
           <Select
             selectedValue={category}
             minWidth="200"
@@ -135,7 +138,7 @@ export default function TransactionScreen() {
             }}
             mt={1}
             onValueChange={itemValue => setCategory(itemValue)}
-            style={isLargeText && styles.largeText}
+            style={globalStyles.text}
           >
             {dataCategory.map((item) => (
               <Select.Item key={item.ID} label={item.name} value={item.name} />
@@ -144,7 +147,7 @@ export default function TransactionScreen() {
         </Box>
 
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Date</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Date</Heading>
           <Button
             variant="outline"
             onPress={() => setShowPicker(true)}
@@ -162,13 +165,13 @@ export default function TransactionScreen() {
         </Box>
 
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Note</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Note</Heading>
           <Input
             variant="outline"
             placeholder="Enter note"
             onChangeText={v => setNote(v)}
             value={note}
-            style={isLargeText && styles.largeText}
+            style={globalStyles.text}
           />
         </Box>
 
@@ -179,7 +182,7 @@ export default function TransactionScreen() {
           colorScheme="teal"
           mt={4}
         >
-          <Text style={isLargeText && styles.largeText}>Save</Text>
+          <Text style={globalStyles.text}>Save</Text>
         </Button>
       </VStack>
     </Center>
@@ -190,8 +193,5 @@ const styles = StyleSheet.create({
   view: {
     flexDirection: "row",
     alignItems: "center",
-  },
-  largeText: {
-    fontSize: 20,
   },
 });

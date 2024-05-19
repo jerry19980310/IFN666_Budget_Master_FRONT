@@ -1,4 +1,4 @@
-import { Text, StyleSheet, Platform } from "react-native";
+import { Text, StyleSheet, Platform, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import { useRoute } from '@react-navigation/native';
 import axios from "axios";
@@ -8,7 +8,7 @@ import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useMyTheme } from '../context/mytheme';
+import { GlobalStyles } from "../styles/global";
 
 
 export default function ModifyTransactionScreen() {
@@ -22,7 +22,7 @@ export default function ModifyTransactionScreen() {
   const [date, setDate] = useState(new Date(transactions.date));
   const [showPicker, setShowPicker] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
-  const { isLargeText } = useMyTheme();
+  const globalStyles = GlobalStyles();
 
   const navigation = useNavigation();
 
@@ -45,7 +45,7 @@ export default function ModifyTransactionScreen() {
       setDataCategories(category.data.categories);
     } catch (error) {
       console.error("Error fetching data: ", error);
-      alert("Cannot connent database. Please try again later.");
+      Alert.alert('ERROR,', "Cannot connent database. Please try again later.");
     }
   };
 
@@ -66,9 +66,10 @@ export default function ModifyTransactionScreen() {
         category: category
       }, {headers});
       handleGoBack();
-      alert("Update transaction successfully!");
+      Alert.alert('WELL DONE,', "Update transaction successfully!");
     } catch (error) {
       console.error('Error posting data:', error);
+      Alert.alert('ERROR,', error.response.data.message);
     }
   };
   
@@ -97,7 +98,7 @@ export default function ModifyTransactionScreen() {
     <Center flex={1} px="3">
       <VStack space={4} w="90%" maxW="400px">
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Amount</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Amount</Heading>
           <InputGroup>
             <InputLeftAddon children={"$"} />
             <Input
@@ -106,14 +107,14 @@ export default function ModifyTransactionScreen() {
               onChangeText={v => setMoney(v)}
               value={money}
               keyboardType="numeric"
-              style={isLargeText && styles.largeText}
+              style={globalStyles.text}
             />
             <InputRightAddon children={"AUD"} />
           </InputGroup>
         </Box>
 
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Category</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Category</Heading>
           <Select
             selectedValue={category}
             minWidth="200"
@@ -125,7 +126,7 @@ export default function ModifyTransactionScreen() {
             }}
             mt={1}
             onValueChange={itemValue => setCategory(itemValue)}
-            style={isLargeText && styles.largeText}
+            style={globalStyles.text}
           >
             {dataCategory.map((item) => (
               <Select.Item key={item.ID} label={item.name} value={item.name} />
@@ -134,7 +135,7 @@ export default function ModifyTransactionScreen() {
         </Box>
 
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Date</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Date</Heading>
           <Button
             variant="outline"
             onPress={() => setShowPicker(true)}
@@ -152,13 +153,13 @@ export default function ModifyTransactionScreen() {
         </Box>
 
         <Box>
-          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Note</Heading>
+          <Heading size="md" mb={2} style={globalStyles.heading}>Note</Heading>
           <Input
             variant="outline"
             placeholder="Enter note"
             onChangeText={v => setNote(v)}
             value={note}
-            style={isLargeText && styles.largeText}
+            style={globalStyles.text}
           />
         </Box>
 
@@ -169,7 +170,7 @@ export default function ModifyTransactionScreen() {
           bg="#D8AE7E"
           mt={4}
         >
-          <Text style={isLargeText && styles.largeText }>Update</Text>
+          <Text style={globalStyles.text}>Update</Text>
         </Button>
       </VStack>
     </Center>

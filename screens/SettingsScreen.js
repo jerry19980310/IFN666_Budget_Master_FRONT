@@ -39,11 +39,11 @@ export default function SettingsScreen() {
         />
         <Text style={globalStyles.text}>Large Text</Text>
       </View>
-      <Button onPress={handleAbout}>
-        <Text>About</Text>
+      <Button bg="#D8AE7E" onPress={handleAbout}>
+        <Text style={isLargeText && styles.largeText}>About</Text>
       </Button>
-      <Button onPress={handleLogout}>
-      <Text>Logout</Text>
+      <Button bg="#D8AE7E" onPress={handleLogout}>
+        <Text style={[isLargeText && styles.largeText, isLargeText && styles.boldText]}>Logout</Text>
       </Button>
     </GlobalLayout>
   );
@@ -54,4 +54,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  largeText: {
+    fontSize: 20,
+  },
+  boldText: {
+    fontWeight : "bold",
+  }
 });

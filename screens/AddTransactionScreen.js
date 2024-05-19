@@ -2,12 +2,13 @@ import { Text, StyleSheet, Platform } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
-import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, Stack, Heading, Button, Icon, CheckIcon, Select } from "native-base";
+import { Box, Center, Input,InputLeftAddon, InputRightAddon, InputGroup, VStack, Heading, Button, Icon, CheckIcon, Select } from "native-base";
 import { AntDesign } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Checkexp from "../components/CheckExp";
+import { useMyTheme } from '../context/mytheme';
 
 
 export default function TransactionScreen() {
@@ -20,6 +21,7 @@ export default function TransactionScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const navigation = useNavigation();
+  const { isLargeText } = useMyTheme();
 
 
 
@@ -101,65 +103,95 @@ export default function TransactionScreen() {
     }
   }, [date, isSave]);
 
-    return (
-      <Center>
-        <Box w="75%" maxW="300px" mx="auto">
-        <InputGroup w={{
-      base: "70%",
-      md: "285"
-    }}>
-        <InputLeftAddon children={"$"} />
-        <Input w={{
-        base: "70%",
-        md: "100%"
-      }} placeholder="" onChangeText={v => setMoney(v)} value={money} keyboardType='numeric'/>
-        <InputRightAddon children={"AUD"} />
-      </InputGroup>
-      </Box>
-      <Box w="75%" maxW="300px" mx="auto">
-      <Heading size="md">Category</Heading>
-      <Select selectedValue={category} minWidth="200" accessibilityLabel="Choose Category" placeholder="Choose Category" _selectedItem={{
-        bg: "teal.600",
-        endIcon: <CheckIcon size="5" />
-      }} mt={1} onValueChange={itemValue => setCategory(itemValue)}>
-        {dataCategory.map((item) => (
-          <Select.Item key={item.ID} label={item.name} value={item.name} />
-        ))}
-        </Select>
-      <Heading size="md">Date</Heading>
-      </Box>
-      <Box w="75%" mx="auto">
-      <Button onPress={() => setShowPicker(true)} >Date</Button>
-      {showPicker && (
-        <DateTimePicker
-          value={date}
-          mode="date" // Change mode to 'datetime' for date and time picker
-          display="default"
-          onChange={onChange}
-        />
-      )}
-      <Stack space={2}>
-      <Text fontSize="md">{date.getDate()}/{date.getMonth()+1}/{date.getFullYear()}</Text>
-      </Stack>
-      </Box>
-      <Heading size="md">Note</Heading>
-      <Box w="75%" maxW="300px" mx="auto">
-      <Input variant="outline" placeholder="" onChangeText={v => setNote(v)} value={note} />
+  return (
+    <Center flex={1} px="3">
+      <VStack space={4} w="90%" maxW="400px">
+        <Box>
+          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Amount</Heading>
+          <InputGroup>
+            <InputLeftAddon children={"$"} />
+            <Input
+              w="80%"
+              placeholder="Enter amount"
+              onChangeText={v => setMoney(v)}
+              value={money}
+              keyboardType="numeric"
+              style={isLargeText && styles.largeText}
+            />
+            <InputRightAddon children={"AUD"} />
+          </InputGroup>
         </Box>
-        <Box w="75%" maxW="300px" mx="auto">
-        <Button leftIcon={<Icon as={AntDesign} name="save" size="sm" />} onPress={() => setIsSave(true) } >
-        Save
-      </Button>
-        
+
+        <Box>
+          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Category</Heading>
+          <Select
+            selectedValue={category}
+            minWidth="200"
+            accessibilityLabel="Choose Category"
+            placeholder="Choose Category"
+            _selectedItem={{
+              bg: "teal.600",
+              endIcon: <CheckIcon size="5" />
+            }}
+            mt={1}
+            onValueChange={itemValue => setCategory(itemValue)}
+            style={isLargeText && styles.largeText}
+          >
+            {dataCategory.map((item) => (
+              <Select.Item key={item.ID} label={item.name} value={item.name} />
+            ))}
+          </Select>
         </Box>
-      </Center>
-        
-    );
-  }
-  
-  const styles = StyleSheet.create({
-    view: {
-      flexDirection: "row",
-      alignItems: "center",
-    },
-  });
+
+        <Box>
+          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Date</Heading>
+          <Button
+            variant="outline"
+            onPress={() => setShowPicker(true)}
+          >
+            {dayjs(date).format("YYYY/MM/DD")}
+          </Button>
+          {showPicker && (
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={onChange}
+            />
+          )}
+        </Box>
+
+        <Box>
+          <Heading size="md" mb={2} style={isLargeText && styles.largeText}>Note</Heading>
+          <Input
+            variant="outline"
+            placeholder="Enter note"
+            onChangeText={v => setNote(v)}
+            value={note}
+            style={isLargeText && styles.largeText}
+          />
+        </Box>
+
+        <Button
+          bg="#D8AE7E"
+          leftIcon={<Icon as={AntDesign} name="save" size="sm" />}
+          onPress={() => setIsSave(true)}
+          colorScheme="teal"
+          mt={4}
+        >
+          <Text style={isLargeText && styles.largeText}>Save</Text>
+        </Button>
+      </VStack>
+    </Center>
+  );
+}
+
+const styles = StyleSheet.create({
+  view: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  largeText: {
+    fontSize: 20,
+  },
+});

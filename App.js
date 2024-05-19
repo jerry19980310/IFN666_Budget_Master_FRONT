@@ -13,9 +13,8 @@ import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import { NativeBaseProvider } from 'native-base';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Alert, BackHandler } from 'react-native';
-import { useState } from "react";
 import AboutPage from "./screens/AboutScreen";
 
 const Tab = createBottomTabNavigator();

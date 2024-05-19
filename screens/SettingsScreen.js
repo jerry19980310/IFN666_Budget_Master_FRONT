@@ -47,7 +47,7 @@ export default function SettingsScreen() {
             await AsyncStorage.setItem("isBoldText", JSON.stringify(!isBoldText));
             setIsBoldText(!isBoldText);
           }}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          trackColor={{ false: "#767577", true: "#96B6C5" }}
         />
         <Text style={globalStyles.text}>Bold Text</Text>
       </View>

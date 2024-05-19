@@ -153,6 +153,11 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   summaryText: {
     color: "#001C30",
     marginLeft: 8,

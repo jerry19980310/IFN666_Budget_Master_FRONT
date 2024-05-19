@@ -1,86 +1,166 @@
-import { useState, useEffect } from "react";
-import { Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useState, useEffect, useCallback } from "react";
+import { StyleSheet } from "react-native";
 import { GlobalLayout } from "../components/Layout";
 import { GlobalStyles } from "../styles/global";
-import { Box, Center, Heading, Image, AspectRatio, Stack, HStack, Container, Input, ScrollView, VStack } from "native-base";
+import { Box, Center, HStack, Input, ScrollView, VStack, Button, Text, Icon } from "native-base";
 import PieChart from 'react-native-pie-chart'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import Checkexp from "../components/CheckExp";
+import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { useMyTheme } from '../context/mytheme';
 
 export default function HomeScreen() {
-  const [articles, setArticles] = useState([]);
-  const [headline, setHeadline] = useState("");
+
   const [money, setMoney] = useState(0);
+  const [summarys, setSummarys] = useState([]);
+  const [filtersummarys, setFilterSummarys] = useState([]);
+  const [year, setYear] = useState('');
+  const [month, setMonth] = useState('');
+  const navigation = useNavigation();
   const globalStyles = GlobalStyles();
+  const { isLargeText } = useMyTheme();
 
-  const widthAndHeight = 250
-  const series = [123, 321, 123, 789, 537]
-  const sliceColor = ['#fbd203', '#ffb300', '#ff9100', '#ff6c00', '#ff3c00']
+  const fetchSummary = async () => {
+    const user_id = await AsyncStorage.getItem('userId');
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
 
-  const setRandomHeadline = (articles) => {
-    const randomIndex = Math.floor(Math.random() * articles.length);
-    const randomArticle = articles[randomIndex];
-    setHeadline(randomArticle.title);
+    try {
+      const response = await axios.get(`http://10.0.2.2:3000/api/transaction/summary/${user_id}`, {headers});
+      setSummarys(response.data.summary);
+      setFilterSummarys(response.data.summary);
+      let mymoney = 0;
+      for (let i = 0; i < response.data.summary.length; i++) {
+        mymoney = mymoney + response.data.summary[i].amount;
+      }
+      setMoney(mymoney);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+      alert(error.response.data.message);
+    }
   };
 
-  const fetchArticles = async  () => {
-    const API_KEY = process.env.EXPO_PUBLIC_NEWS_KEY;
-    const newsURL = `https://newsapi.org/v2/top-headlines?country=au&apiKey=${API_KEY}`;
+  const handlefilter = () => {
 
-    const response = await fetch(newsURL);
-    const data = await response.json();
-    const articles = data.articles;
+    if (!year || !month) {
+      setFilterSummarys(summarys);
+      let mymoney = 0;
+      for (let i = 0; i < summarys.length; i++) {
+      mymoney = mymoney + summarys[i].amount;
+    }
+    setMoney(mymoney);
+      return;
+    }
 
-    setRandomHeadline(articles);
-    setArticles(articles);
-  };
+    const filtered = summarys.filter((summary) => { 
+      return summary.Year === Number(year) && summary.Month === Number(month);
+    });
+    setFilterSummarys(filtered);
+
+    let mymoney = 0;
+    for (let i = 0; i < filtered.length; i++) {
+      mymoney = mymoney + filtered[i].amount;
+    }
+    setMoney(mymoney);
+
+  }
 
   useEffect(() => {
-    (async () => await fetchArticles())();
+    fetchSummary();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function check() {
+        const isExpire = await Checkexp();
+        console.log(isExpire);
+        if(!isExpire){
+          fetchSummary();
+          setYear('');
+          setMonth('');
+        }
+        else{
+          navigation.navigate("Login");
+        } 
+      }
+      check();
+    }, [])
+  );
+
+  useEffect(() => {
+    handlefilter();    
+  }, [year, month]);
 
   return (
     <GlobalLayout>
-      <Center>
-        <HStack space={3} justifyContent="center">
-          <Input w={{
-            base: "25%",
-            md: "25%"
-          }} variant="outline" placeholder="Year" />
-          <Input w={{
-            base: "25%",
-            md: "25%"
-          }} variant="outline" placeholder="Month" />
-        </HStack>
-        <Box>
-        <PieChart
-            widthAndHeight={widthAndHeight}
-            series={series}
-            sliceColor={sliceColor}
-            coverRadius={0.45}
-            coverFill={'#FFF'}
-          >ABC</PieChart>
-          <Text bold>Total: $ {money} AUD</Text>
-        </Box>
-
-        <ScrollView>
-          <VStack space={4} alignItems="center">
-            <Center w="64" h="20" bg="indigo.300" rounded="md" shadow={3} > Categort1 </Center>
-            <Center w="64" h="20" bg="indigo.500" rounded="md" shadow={3} > Categort2 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Categort3 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Categort4 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Categort5 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Categort6 </Center>
-            <Center w="64" h="20" bg="indigo.700" rounded="md" shadow={3} > Categort7 </Center>
-          </VStack>
-        </ScrollView>
-
+      <Center flex={1} px="3">
+        <VStack space={4} w="90%" maxW="400px">
+          <HStack space={3} justifyContent="center">
+            <Input 
+              w="45%" 
+              variant="outline" 
+              placeholder="Year" 
+              onChangeText={v => setYear(v)} 
+              value={year} 
+              keyboardType='numeric' 
+              style={isLargeText && styles.largeText}
+            />
+            <Input 
+              w="45%" 
+              variant="outline" 
+              placeholder="Month" 
+              onChangeText={v => setMonth(v)} 
+              value={month} 
+              keyboardType='numeric' 
+              style={isLargeText && styles.largeText}
+            />
+          </HStack>
+          <Center>
+            <Text fontSize="2xl" bold style={isLargeText && styles.largeText}>Total: $ {money.toFixed()} AUD</Text>
+          </Center>
+          <ScrollView >
+            <VStack space={4} alignItems="center">
+              {filtersummarys.map((summary, index) => (
+                <Box key={index} w="100%" bg="#D8AE7E" p="4" rounded="md" shadow={3}>
+                  <HStack justifyContent="space-between">
+                    <VStack space={2}>
+                      <HStack alignItems="center" space={3} justifyContent="space-between">
+                        <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#fff" />
+                        <Text style={[styles.summaryText, isLargeText && styles.largeText]} bold> Year: {summary.Year}</Text>
+                        <Text style={[styles.summaryText, isLargeText && styles.largeText]} bold> Month: {summary.Month}</Text>
+                      </HStack>
+                      <HStack alignItems="center">
+                        <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#fff" />
+                        <Text style={[styles.summaryText, isLargeText && styles.largeText]}> Category: {summary.category}</Text>
+                      </HStack>
+                      <HStack alignItems="center">
+                        <Icon as={MaterialIcons} name="attach-money" size="sm" color="#fff" />
+                        <Text style={[styles.summaryText, isLargeText && styles.largeText]}> Amount: ${summary.amount}</Text>
+                      </HStack>
+                    </VStack>
+                  </HStack>
+                </Box>
+              ))}
+            </VStack>
+          </ScrollView>
+        </VStack>
       </Center>
-
     </GlobalLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  touchable: {
-    height: "100%",
+  summaryText: {
+    color: "#fff",
+    marginLeft: 8,
+  },
+  largeText: {
+    fontSize: 20,
   },
 });

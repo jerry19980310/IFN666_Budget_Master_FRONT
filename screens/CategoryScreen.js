@@ -4,6 +4,7 @@ import axios from "axios";
 import { Center, ScrollView, VStack, HStack, Button, Icon, IconButton } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from '@expo/vector-icons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function CategoryScreen() {
   const [dataCategory, setDataCategories] = useState([]);
@@ -53,8 +54,14 @@ export default function CategoryScreen() {
   };
 
   const fetchCategory = async () => {
+    const token = await AsyncStorage.getItem('jwtToken');
+    const headers = {
+      accept: "application/json",
+      "Content-Type" : "application/json",
+      Authorization: `Bearer ${token}`
+    }
     try {
-      const category = await axios.get(`http://10.0.2.2:3000/api/category/1`);
+      const category = await axios.get(`http://10.0.2.2:3000/api/category`, {headers});
       console.log("category.data: ", category.data.categories);
       setDataCategories(category.data.categories);
     } catch (error) {
@@ -67,21 +74,21 @@ export default function CategoryScreen() {
     fetchCategory();
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    if(isCreate === true){
-      createCategory();
-    }
+  //   if(isCreate === true){
+  //     createCategory();
+  //   }
 
-    if(isModify === true){
-      updateCategory();
-    }
+  //   if(isModify === true){
+  //     updateCategory();
+  //   }
 
-    if(isDelete === true){
-      deleteCategory();
-    }
+  //   if(isDelete === true){
+  //     deleteCategory();
+  //   }
 
-  }, [isCreate, isModify, isDelete]);
+  // }, [isCreate, isModify, isDelete]);
 
 
 

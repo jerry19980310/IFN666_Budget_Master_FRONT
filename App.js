@@ -13,59 +13,14 @@ import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
 import { NativeBaseProvider } from 'native-base';
 import { createStackNavigator } from '@react-navigation/stack';
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { Alert, BackHandler } from 'react-native';
+import AboutPage from "./screens/AboutScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
-const StackNavigator = () => {
-  return (
-    <Stack.Navigator >
-      <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
-      <Stack.Screen name="Home" component={TabsNavigator} options={{headerShown: false}}/>
-      <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
-    </Stack.Navigator>
-  );
-}
 
-const TabsNavigator = () => {
-  return (
-    <Tab.Navigator
-          screenOptions={({ route }) => {
-            return {
-              tabBarIcon: ({ color, size }) => {
-                let iconName;
-                if (route.name === "Home") {
-                  iconName = "home";
-                } else if (route.name === "Settings") {
-                  iconName = "setting";
-                }
-                else if (route.name === "Category") {
-                  iconName = "book";
-                }
-                else if (route.name === "Transaction") {
-                  iconName = "plus";
-                }
-                else if (route.name === "History") {
-                  iconName = "calendar";
-                }
-                return (
-                  <AntDesign name={iconName} size={size} color={color} />
-                );
-              },
-            };
-          }}
-        >
-          <Tab.Screen name="Home" component={HoneScreen} />
-          <Tab.Screen name="Settings" component={SettingsScreen} />
-          <Tab.Screen name="Category" component={CategoryScreen} />
-          <Tab.Screen name="Transaction" component={AddTransactionScreen} />
-          <Tab.Screen name="History" component={HistoryScreen} />
-        </Tab.Navigator>
-  );
-};
 
 
 export default function App() {
@@ -73,6 +28,60 @@ export default function App() {
   const AuthContext = createContext();
   
   const isAuthenticated = false;
+
+  const [isExpire, setIsExpire] = useState(false);
+
+  const StackNavigator = () => {
+    return (
+      <Stack.Navigator >
+        <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
+        <Stack.Screen name="Tabview" component={TabsNavigator} options={{headerShown: false}}/>
+        <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
+        <Stack.Screen name="About" component={AboutPage}  options={{ title: 'About', headerShown: true}}/>
+      </Stack.Navigator>
+    );
+  }
+  
+  const TabsNavigator = () => {
+    
+    return (
+      <Tab.Navigator
+            screenOptions={({ route }) => {
+              return {
+                tabBarIcon: ({ color, size }) => {
+                  let iconName;
+                  if (route.name === "Home") {
+                    iconName = "home";
+                  } else if (route.name === "Settings") {
+                    iconName = "setting";
+                  }
+                  else if (route.name === "Category") {
+                    iconName = "book";
+                  }
+                  else if (route.name === "Transaction") {
+                    iconName = "plus";
+                  }
+                  else if (route.name === "History") {
+                    iconName = "calendar";
+                  }
+                  return (
+                    <AntDesign name={iconName} size={size} color={color} />
+                  );
+                },
+              };
+            }}
+          >
+            <Tab.Screen name="Home" component={HoneScreen} />
+            <Tab.Screen name="Transaction" component={AddTransactionScreen} />
+            <Tab.Screen name="History" component={HistoryScreen} />
+            <Tab.Screen name="Settings" component={SettingsScreen} />
+            {/* <Tab.Screen name="Category" component={CategoryScreen} /> */}
+            
+          </Tab.Navigator>
+    );
+  };
 
 
   return (

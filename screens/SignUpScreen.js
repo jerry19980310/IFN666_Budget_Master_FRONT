@@ -25,7 +25,6 @@ const SignUpScreen = ({ navigation }) => {
       Alert.alert("Remind","Please enter username and password");
       return;
     }
-
     try {
       const response = await axios.post('http://10.0.2.2:3000/users/register', {
         username: userName,
@@ -38,12 +37,11 @@ const SignUpScreen = ({ navigation }) => {
         setPassword('');
         navigation.navigate('Login');
       }
-
-
     } catch (error) {
       
       Alert.alert("ERROR",error.response.data.message);
     }
+
   };
 
 

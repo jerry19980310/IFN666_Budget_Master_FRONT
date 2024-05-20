@@ -15,7 +15,7 @@ import { NativeBaseProvider } from 'native-base';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Alert, BackHandler } from 'react-native';
-import AboutPage from "./screens/AboutScreen";
+import AboutScreen from "./screens/AboutScreen";
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -39,7 +39,7 @@ export default function App() {
         <Stack.Screen name="SignUp" component={SignUpScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Tabview" component={TabsNavigator} options={{headerShown: false}}/>
         <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
-        <Stack.Screen name="About" component={AboutPage}  options={{ title: 'About', headerShown: true}}/>
+        <Stack.Screen name="About" component={AboutScreen}  options={{ title: 'About', headerShown: true}}/>
       </Stack.Navigator>
     );
   }
@@ -76,8 +76,9 @@ export default function App() {
             <Tab.Screen name="Home" component={HoneScreen} />
             <Tab.Screen name="Transaction" component={AddTransactionScreen} />
             <Tab.Screen name="History" component={HistoryScreen} />
+            <Tab.Screen name="Category" component={CategoryScreen} />
             <Tab.Screen name="Settings" component={SettingsScreen} />
-            {/* <Tab.Screen name="Category" component={CategoryScreen} /> */}
+            
             
           </Tab.Navigator>
     );

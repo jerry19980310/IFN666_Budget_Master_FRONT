@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Alert } from 'react-native';
+import { Alert } from 'native-base';
 import dayjs from 'dayjs';
 
 const ROOT = 'http://10.0.2.2:3000'
@@ -38,12 +38,12 @@ export const deleteTransaction = async (transactionID) => {
   }
 };
 
-export const createCategory = async () => {
+export const createCategory = async (categoryName) => {
   const user_id = await AsyncStorage.getItem('userId');
   const headers = await getHeaders();
   try {
     const response = await axios.post(`${ROOT}/api/category/create`, {
-      name: 'Testttt',
+      name: categoryName,
       user_id: user_id
     }, { headers });
     return response.data;
@@ -110,11 +110,24 @@ export const newTransaction = async (money, date, note, category) => {
   }
 };
 
-export const fetchSummary = async () => {
+export const fetchSummaryYearMonth = async () => {
   const user_id = await AsyncStorage.getItem('userId');
   const headers = await getHeaders();
   try {
-    const response = await axios.get(`${ROOT}/api/transaction/summary/${user_id}`, { headers });
+    const response = await axios.get(`${ROOT}/api/transaction/summarybyyearmonth/${user_id}`, { headers });
+    return response.data.summary;
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+    Alert.alert('ERROR', error.response?.data?.message || 'Error fetching data. Please try again later.');
+    throw error;
+  }
+};
+
+export const fetchSummaryCategory = async () => {
+  const user_id = await AsyncStorage.getItem('userId');
+  const headers = await getHeaders();
+  try {
+    const response = await axios.get(`${ROOT}/api/transaction/summarybycategory/${user_id}`, { headers });
     return response.data.summary;
   } catch (error) {
     console.error("Error fetching data: ", error);

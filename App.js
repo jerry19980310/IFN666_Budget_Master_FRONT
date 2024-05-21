@@ -11,6 +11,7 @@ import ModifyTransactionScreen from "./screens/ModifyTransactionScreen";
 import SplashScreen from "./screens/SplashScreen";
 import LoginScreen from "./screens/LoginScreen";
 import SignUpScreen from "./screens/SignUpScreen";
+import SummaryScreen from "./screens/SummaryScreen";
 import { NativeBaseProvider } from 'native-base';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -40,6 +41,7 @@ export default function App() {
         <Stack.Screen name="Tabview" component={TabsNavigator} options={{headerShown: false}}/>
         <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
         <Stack.Screen name="About" component={AboutScreen}  options={{ title: 'About', headerShown: true}}/>
+        <Stack.Screen name="Summary" component={SummaryScreen}  options={{ title: 'Summary', headerShown: true}}/>
       </Stack.Navigator>
     );
   }

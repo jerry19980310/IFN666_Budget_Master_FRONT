@@ -62,6 +62,8 @@ export default function HistoryScreen() {
     setFilterTransactions(filtered);
   };
 
+
+
   useEffect(() => {
     loadTransactions();
   }, []);
@@ -124,7 +126,7 @@ export default function HistoryScreen() {
         <VStack space={4} w="90%" maxW="400px" mx="auto" alignItems="center">
           {filterTransactions.length > 0 ? (
             filterTransactions.map(transaction => (
-              <Box key={transaction.ID} p="4" bg="#96B6C5" rounded="md" shadow={2} mb={2} w="100%">
+              <Box key={transaction.ID} p="4" bg="#B3C8CF" rounded="md" shadow={2} mb={2} w="100%">
                 <HStack justifyContent="space-between" alignItems="center">
                   <VStack space={2} w="70%">
                     <HStack alignItems="center" space={2}>

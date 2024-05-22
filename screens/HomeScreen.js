@@ -47,7 +47,7 @@ export default function HomeScreen() {
   const handlePress = () => {
     console.log(year, month,"HOME");
     
-    navigation.navigate("Summary", { year, month });
+    navigation.navigate("MonthlyDetial", { year, month });
   };
 
   useEffect(() => {
@@ -81,11 +81,15 @@ export default function HomeScreen() {
 
   return (
     <GlobalLayout>
-      <VStack space={4} w="90%" maxW="400px" mx="auto" >
+      <Center>
+        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Hi, </Text>
+      </Center>
+      <VStack>
       <BarChart
         data={barChartData}
         width={(Dimensions.get("window").width)} // from react-native
         height={245}
+        fromZero={true}
         yAxisLabel="$"
         chartConfig={{
           backgroundColor: "#D5F0C1",
@@ -105,7 +109,8 @@ export default function HomeScreen() {
           }
         }}
 
-        verticalLabelRotation={30}
+        verticalLabelRotation={0}
+        showValuesOnTopOfBars={true}
       />
       </VStack>
       {/* <HStack space={3} justifyContent="center" mt="2">
@@ -145,7 +150,7 @@ export default function HomeScreen() {
                       <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#EEE0C9" />
                       <Text style={[styles.summaryText, globalStyles.text]}>Year: {data.year}</Text>
                       <Icon as={MaterialIcons} name="calendar-month" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.summaryText, globalStyles.text]}>Month: {data.month}</Text>
+                      <Text style={[styles.summaryText, globalStyles.text]}>Month: {data.month.toString().padStart(2, '0')}</Text>
                     </HStack>
                     <HStack alignItems="center">
                       <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />

@@ -14,42 +14,23 @@ export default function SummaryScreen() {
   const route = useRoute();
   const { year, month } = route.params;
   const [datas, setDatas] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [queryyear, setQueryYear] = useState(year);
   const [querymonth, setQueryMonth] = useState(month);
   const [filterDatas, setFilterDatas] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [pieData, setPieData] = useState([]);
   const globalStyles = GlobalStyles();
   const navigation = useNavigation();
 
   const handleGoBack = () => {
     navigation.goBack();
+    setQueryYear('');
+    setQueryMonth('');
+    setFilterDatas([]);
+    setTotalAmount(0);
+    setPieData([]);
+
   };
-
-  const generateRandomPinkColor = () => {
-    const red = 255; 
-    const green = Math.floor(Math.random() * 156) + 100;
-    const blue = Math.floor(Math.random() * 156) + 100;
-    return `rgb(${red},${green},${blue})`;
-  };
-
-  const generatePinkColors = (num) => {
-    const colors = [];
-    for (let i = 0; i < num; i++) {
-      colors.push(generateRandomPinkColor());
-    }
-    return colors;
-  };
-
-  const colors = generatePinkColors(filterDatas.length);
-
-  const pieData = filterDatas.map((item, index) => ({
-    name: item.category,
-    population: item.amount,
-    color: colors[index],
-    legendFontColor: '#7F7F7F',
-    legendFontSize: 15
-  }));
 
   const handleFilter = (dataList = datas) => {
     const filtered = dataList.filter(summary =>
@@ -60,20 +41,14 @@ export default function SummaryScreen() {
     setTotalAmount(totalAmount);
   };
 
-  const handleCategory = () => {
-    const categoryList = datas.map(item => item.category);
-    setCategories(categoryList);
-  }
-
 
   const loadCategories = async () => {
     try {
       const summary = await fetchSummaryCategory();
-      console.log(summary);
       setDatas(summary);
       handleFilter(summary);
-      handleCategory();
-
+      
+      
     } catch (error) {
       // Error handling is done in fetchSummaryCategory
     }
@@ -82,8 +57,17 @@ export default function SummaryScreen() {
 
   useEffect(() => {
     loadCategories();
+    console.log("HIII");
 
   }, []);
+
+  useEffect(() => {
+    handlePieData();
+    const piechart = handlePieData();
+      setPieData(piechart);
+
+  }, [filterDatas]);
+
 
 
   useFocusEffect(
@@ -100,75 +84,90 @@ export default function SummaryScreen() {
     }, [navigation])
   );
 
-  const pieChartData = [
-    {
-      name: "Seoul",
-      population: 21500000,
-      color: "rgba(131, 167, 234, 1)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15
-    },
-    {
-      name: "Toronto",
-      population: 2800000,
-      color: "#F00",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15
-    },
-    {
-      name: "Beijing",
-      population: 527612,
-      color: "red",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15
-    },
-    {
-      name: "New York",
-      population: 8538000,
-      color: "#ffffff",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15
-    },
-    {
-      name: "Moscow",
-      population: 11920000,
-      color: "rgb(0, 0, 255)",
-      legendFontColor: "#7F7F7F",
-      legendFontSize: 15
+
+
+  const generateRandomPastelColor = () => {
+    const pastelColors = [
+      '#FFC0CB', // 粉红色
+      '#FFB6C1', // 浅粉红色
+      '#FF69B4', // 热粉色
+      '#DB7093', // 苍白的紫罗兰红色
+      '#FF1493', // 深粉色
+      '#FF00FF', // 紫红色
+      '#BA55D3', // 中紫罗兰色
+      '#9370DB', // 中紫色
+      '#DA70D6', // 浅紫色
+      '#DDA0DD', // 梅红色
+      '#EE82EE', // 紫罗兰色
+      '#D8BFD8', // 蓟色
+      '#DDA0DD', // 梅红色
+      '#E6E6FA', // 薰衣草色
+      '#B0E0E6', // 粉蓝色
+      '#ADD8E6', // 浅蓝色
+      '#87CEEB', // 天蓝色
+      '#87CEFA', // 淡蓝色
+      '#B0C4DE', // 浅钢蓝色
+      '#AFEEEE', // 浅绿色
+      '#00CED1', // 深浅绿色
+      '#48D1CC', // 适中的浅绿色
+      '#40E0D0', // 绿宝石色
+      '#E0FFFF', // 浅青色
+    ];
+    return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+  };
+  
+  // 为数据生成颜色数组
+  const generateColors = (num) => {
+    const colors = [];
+    for (let i = 0; i < num; i++) {
+      colors.push(generateRandomPastelColor());
     }
-  ];
+    return colors;
+  };
+
+  const colors = generateColors(filterDatas.length);
+
+  
+  const handlePieData = () => {
+    const pieData = filterDatas.map((item, index) => ({
+      name: item.category,
+      population: item.amount,
+      color: colors[index],
+      legendFontColor: '#7F7F7F',
+      legendFontSize: 15
+    }));
+    // console.log(typeof(pieData[0].population));
+    return pieData;
+  };
+
+
+  // (((Number(item.amount)/totalAmount)*100).toFixed(1)).toString(),
+
+  // console.log((((pieData[0].population/totalAmount)*100).toFixed(1)).toString());
+
 
   return (
     <GlobalLayout>
+      <Center>
+      <HStack alignItems="center" space={3} justifyContent="space-between">
+        <Icon as={MaterialIcons} name="calendar-month" size="lg" color="#EEE0C9" />
+        <Text style={[styles.summaryText, globalStyles.text]}>{queryyear}-{querymonth.toString().padStart(2, '0')}</Text>
+      </HStack>
+      </Center>
+
       <VStack space={4} w="90%" maxW="400px" mx="auto" >
         <PieChart
           data={pieData}
           width={(Dimensions.get("window").width)} // from react-native
           height={245}
           chartConfig={{
-            backgroundColor: "#D5F0C1",
-            backgroundGradientToOpacity: "0.5",
-            backgroundGradientFrom: "#96B6C5",
-            backgroundGradientTo: "#5F5D9C",
-            decimalPlaces: 2, // optional, defaults to 2dp
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            style: {
-              borderRadius: 16
-            },
-            propsForDots: {
-              r: "6",
-              strokeWidth: "2",
-              stroke: "#80BCBD"
-            }
           }}
           accessor={"population"}
           backgroundColor={"transparent"}
-          paddingLeft={"15"}
-          center={[10, 50]}
-          absolute
+          paddingLeft={"10"}
+          center={[0, 0]}
         />
-
       </VStack>
 
       <Center>
@@ -183,12 +182,6 @@ export default function SummaryScreen() {
               <Box key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
-                    <HStack alignItems="center" space={3} justifyContent="space-between">
-                      <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.summaryText, globalStyles.text]}>Year: {data.year}</Text>
-                      <Icon as={MaterialIcons} name="calendar-month" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.summaryText, globalStyles.text]}>Month: {data.month}</Text>
-                    </HStack>
                     <HStack alignItems="center">
                       <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#EEE0C9" />
                       <Text style={[styles.categoryText, globalStyles.text]}>Category: {data.category}</Text>
@@ -228,5 +221,11 @@ const styles = StyleSheet.create({
   },
   largeText: {
     fontSize: 20,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
   },
 });

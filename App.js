@@ -1,6 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
+import { Text } from "native-base";
 import HoneScreen from "./screens/HomeScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import { MyThemeProvider } from "./context/mytheme";
@@ -17,6 +18,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { Alert, BackHandler } from 'react-native';
 import AboutScreen from "./screens/AboutScreen";
+import UserIcon from "./components/UserIcon";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -32,6 +35,16 @@ export default function App() {
 
   const [isExpire, setIsExpire] = useState(false);
 
+  const [userName, setUserName] = useState('');
+
+  const fetchData = async () => {
+    const userName = await AsyncStorage.getItem('username');
+    setUserName(userName);
+    console.log(userName);
+  };
+
+  fetchData();
+
   const StackNavigator = () => {
     return (
       <Stack.Navigator >
@@ -41,7 +54,7 @@ export default function App() {
         <Stack.Screen name="Tabview" component={TabsNavigator} options={{headerShown: false}}/>
         <Stack.Screen name="ModifyTransaction" component={ModifyTransactionScreen}  options={{ title: 'Modify Transaction', headerShown: true}}/>
         <Stack.Screen name="About" component={AboutScreen}  options={{ title: 'About', headerShown: true}}/>
-        <Stack.Screen name="Summary" component={SummaryScreen}  options={{ title: 'Summary', headerShown: true}}/>
+        <Stack.Screen name="MonthlyDetial" component={SummaryScreen}  options={{ title: 'Monthly detial', headerShown: true}}/>
       </Stack.Navigator>
     );
   }
@@ -75,7 +88,11 @@ export default function App() {
               };
             }}
           >
-            <Tab.Screen name="Home" component={HoneScreen} />
+        <Tab.Screen name="Home" component={HoneScreen} options={{
+          headerRight: () => (
+            <UserIcon userName={userName}/>
+          ),
+        }} />
             <Tab.Screen name="Transaction" component={AddTransactionScreen} />
             <Tab.Screen name="History" component={HistoryScreen} />
             <Tab.Screen name="Category" component={CategoryScreen} />
@@ -85,6 +102,7 @@ export default function App() {
           </Tab.Navigator>
     );
   };
+  
 
 
   return (

@@ -1,5 +1,5 @@
 // HistoryScreen.js
-import { Text, StyleSheet, Alert } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import dayjs from "dayjs";
 import { useState, useEffect, useCallback } from "react";
 import { Center, Input, ScrollView, VStack, HStack, IconButton, Box, Icon } from "native-base";

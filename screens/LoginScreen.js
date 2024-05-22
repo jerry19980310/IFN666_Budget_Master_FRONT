@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Alert, BackHandler } from 'react-native';
-import { Input, Stack, Icon, Pressable, Box, Button } from 'native-base';
+import { Input, Stack, Icon, Pressable, Box, Button, useToast } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from 'axios';
@@ -23,6 +23,8 @@ const LoginScreen = () => {
 
   const globalStyles = GlobalStyles();
 
+  const toast = useToast();
+
 
   const login = async () => {
 
@@ -42,12 +44,16 @@ const LoginScreen = () => {
 
       await AsyncStorage.setItem('jwtToken', response.data.token);
       await AsyncStorage.setItem('userId', JSON.stringify(decode.tokenPayload.userId));
-      await AsyncStorage.setItem('username', decode.tokenPayload.username);
+      await AsyncStorage.setItem('username', decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase()));
       await AsyncStorage.setItem('exp', JSON.stringify(decode.exp));
 
       navigation.navigate('Tabview')
 
-      Alert.alert('Hello,', (userName.toUpperCase()) + " , Nice to see you again!!!");
+      toast.show({
+        description: `Hello, ${userName} , Nice to see you again!`,
+        duration: 3000,
+        placement: "top"
+      });
 
       setUserName('');
       setPassword('');
@@ -62,7 +68,11 @@ const LoginScreen = () => {
       const token = await AsyncStorage.getItem('jwtToken');
       const userName = await AsyncStorage.getItem('username');
       if (token) {
-        Alert.alert('Hello' , (userName.toUpperCase()) + " Welcome back!!!");
+        toast.show({
+          description: `Hi, ${userName} , Welcome back!`,
+          duration: 3000,
+          placement: "top"
+        });
         navigation.navigate('Tabview');
       }
     }

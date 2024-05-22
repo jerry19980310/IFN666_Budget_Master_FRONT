@@ -1,6 +1,6 @@
 import { Text, StyleSheet, Alert } from "react-native";
 import { useState, useEffect, useCallback } from "react";
-import { Center, FlatList, VStack, HStack, Button, Icon, IconButton, Input, Box } from "native-base";
+import { Center, FlatList, VStack, HStack, Button, Icon, IconButton, Input, Box, useToast } from "native-base";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GlobalLayout } from "../components/Layout";
@@ -8,6 +8,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Checkexp from "../components/CheckExp";
 import { createCategory, deleteCategory, initialCategory, fetchCategory } from "../components/ApiController";
 import { GlobalStyles } from "../styles/global";
+import MyAlert from "../components/MyAlert";
 
 export default function CategoryScreen() {
   const [dataCategory, setDataCategories] = useState([]);
@@ -17,7 +18,7 @@ export default function CategoryScreen() {
   const [categoryID, setCategoryID] = useState(0);
   const [categoryName, setCategoryName] = useState('');  
   const navigation = useNavigation();
-
+  const toast = useToast();
   const globalStyles = GlobalStyles();
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function CategoryScreen() {
       async function check() {
         const isExpire = await Checkexp();
         if (!isExpire) {
+          setCategoryName('');
           loadCategories();
         } else {
           navigation.navigate("Login");
@@ -64,16 +66,46 @@ export default function CategoryScreen() {
       }
       setDataCategories(categories);
     } catch (error) {
-      Alert.alert('ERROR', "Cannot connect to database. Please try again later.");
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Cannot connect to database. Please try again later." variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
     }
   };
 
   const handleCreateCategory = async () => {
+    if (!categoryName) {
+      toast.show({
+        render: () => (
+          <MyAlert title="Warning" description="Please enter the category name" variant="subtle" status="warning" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+      return;
+    }
     try {
       await createCategory(categoryName);
       loadCategories();
+      toast.show({
+        render: () => (
+          <MyAlert title="Success" description="Category created successfully" variant="top-accent" status="success" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
     } catch (error) {
-      console.error('Error creating category:', error);
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Error creating category:" variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+
     }
   };
 
@@ -81,8 +113,21 @@ export default function CategoryScreen() {
     try {
       await deleteCategory(categoryID);
       loadCategories();
+      toast.show({
+        render: () => (
+          <MyAlert title="Success" description="Category deleted successfully" variant="top-accent" status="success" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
     } catch (error) {
-      console.error('Error deleting category:', error);
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Error deleting category:" variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
     }
   };
 
@@ -91,7 +136,13 @@ export default function CategoryScreen() {
       await initialCategory();
       loadCategories();
     } catch (error) {
-      console.error('Error initializing category:', error);
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Error initializing category:" variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
     }
   };
 

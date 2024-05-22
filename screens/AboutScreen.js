@@ -1,10 +1,10 @@
 import React from 'react';
 import { Text, Linking, StyleSheet} from 'react-native';
-import licensesData from '../licenses'; // Import your licenses.json file
+import licensesData from '../licenses'; // Import licenses.json file
 import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
-import { Center, Input, ScrollView, VStack, HStack, IconButton, Box, Icon } from "native-base";
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Center, ScrollView, VStack, HStack, Box, Icon } from "native-base";
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 

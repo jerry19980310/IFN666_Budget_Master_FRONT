@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
-import { StyleSheet, Text, Alert, Dimensions } from "react-native";
+import { StyleSheet, Text, Dimensions } from "react-native";
 import { GlobalLayout } from "../components/Layout";
 import { GlobalStyles } from "../styles/global";
-import { Box, Center, HStack, Input, ScrollView, VStack, Icon, Pressable } from "native-base";
+import { Center, HStack, ScrollView, VStack, Icon, Pressable } from "native-base";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Checkexp from "../components/CheckExp";
 import { fetchSummaryYearMonth } from "../components/ApiController";
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { BarChart } from "react-native-chart-kit";
 
 
@@ -81,9 +81,6 @@ export default function HomeScreen() {
 
   return (
     <GlobalLayout>
-      <Center>
-        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Hi, </Text>
-      </Center>
       <VStack>
       <BarChart
         data={barChartData}

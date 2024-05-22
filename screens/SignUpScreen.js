@@ -1,51 +1,52 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native';
-import { Input, Icon, Stack, Box, Pressable, Button } from 'native-base';
+import { Input, Icon, Stack, Box, Pressable, Button, useToast } from 'native-base';
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from 'axios';
-import { useMyTheme } from '../context/mytheme';
 import "core-js/stable/atob";
 import { useState } from 'react';
+import { GlobalStyles } from "../styles/global";
+import MyAlert from '../components/MyAlert';
 
 
 
 const SignUpScreen = ({ navigation }) => {
 
   const [show, setShow] = useState(false);
-  
   const [userName, setUserName] = useState('');
-
   const [password, setPassword] = useState('');
-
-  const { isLargeText } = useMyTheme();
+  const globalStyles = GlobalStyles();
+  const toast = useToast();
 
   const signup = async () => {
 
     if(!userName || !password){
-      Alert.alert("Remind","Please enter username and password");
+      toast.show({
+        render: () => (
+          <MyAlert title="Warning" description="Please enter username and password" variant="left-accent" status="warning" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
       return;
     }
-
     try {
       const response = await axios.post('http://10.0.2.2:3000/users/register', {
         username: userName,
         password: password
       });
 
-      console.log(response.data);
-
       if(response.data.success){
-        alert(response.data.message + ". Please login to continue");
+        Alert.alert("Remind",response.data.message + "Please login to continue.");
         setUserName('');
         setPassword('');
         navigation.navigate('Login');
       }
-
-
     } catch (error) {
       
-      alert(error.response.data.message);
+      Alert.alert("ERROR",error.response.data.message);
     }
+
   };
 
 
@@ -63,7 +64,7 @@ const SignUpScreen = ({ navigation }) => {
               placeholder="Enter your Username"
               onChangeText={setUserName}
               value={userName}
-              style={isLargeText && styles.largeText || styles.input}
+              style={globalStyles.text}
             />
             <Input
               w={styles.inputWidth}
@@ -76,11 +77,11 @@ const SignUpScreen = ({ navigation }) => {
               placeholder="Password"
               onChangeText={setPassword}
               value={password}
-              style={isLargeText && styles.largeText || styles.input}
+              style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={signup} style={styles.button} _text={isLargeText && styles.largeText ||  styles.buttonText}>Sign Up</Button>
-              <Button onPress={() => navigation.navigate('Login')} style={styles.button} _text={isLargeText && styles.largeText || styles.buttonText}>Login</Button>
+              <Button onPress={signup} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
+              <Button onPress={() => navigation.navigate('Login')} style={styles.button} _text={globalStyles.text}>Login</Button>
             </View>
           </Stack>
         </Box>

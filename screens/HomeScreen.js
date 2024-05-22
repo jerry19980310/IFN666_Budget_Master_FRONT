@@ -1,163 +1,159 @@
 import { useState, useEffect, useCallback } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text, Dimensions } from "react-native";
 import { GlobalLayout } from "../components/Layout";
 import { GlobalStyles } from "../styles/global";
-import { Box, Center, HStack, Input, ScrollView, VStack, Button, Text, Icon } from "native-base";
-import PieChart from 'react-native-pie-chart'
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import { Center, HStack, ScrollView, VStack, Icon, Pressable } from "native-base";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Checkexp from "../components/CheckExp";
-import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { useMyTheme } from '../context/mytheme';
+import { fetchSummaryYearMonth } from "../components/ApiController";
+import { MaterialIcons } from '@expo/vector-icons';
+import { BarChart } from "react-native-chart-kit";
+
 
 export default function HomeScreen() {
-
-  const [money, setMoney] = useState(0);
   const [summarys, setSummarys] = useState([]);
-  const [filtersummarys, setFilterSummarys] = useState([]);
+  const [barChartData, setBarChartData] = useState({
+    labels: [],
+    datasets: [{ data: [] }]
+  });
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
+  const [isPress, setIsPress] = useState(false);
   const navigation = useNavigation();
   const globalStyles = GlobalStyles();
-  const { isLargeText } = useMyTheme();
 
-  const fetchSummary = async () => {
-    const user_id = await AsyncStorage.getItem('userId');
-    const token = await AsyncStorage.getItem('jwtToken');
-    const headers = {
-      accept: "application/json",
-      "Content-Type" : "application/json",
-      Authorization: `Bearer ${token}`
-    }
-
+  const loadSummary = async () => {
     try {
-      const response = await axios.get(`http://10.0.2.2:3000/api/transaction/summary/${user_id}`, {headers});
-      setSummarys(response.data.summary);
-      setFilterSummarys(response.data.summary);
-      let mymoney = 0;
-      for (let i = 0; i < response.data.summary.length; i++) {
-        mymoney = mymoney + response.data.summary[i].amount;
-      }
-      setMoney(mymoney);
+      const summaryData = await fetchSummaryYearMonth();
+      setSummarys(summaryData);
+
+      const labels = summaryData.map(item => `${item.year}-${String(item.month).padStart(2, '0')}`);
+      const dataValues = summaryData.map(item => item.amount.toFixed(2));
+      const result = {
+        labels: labels,
+        datasets: [
+          {
+            data: dataValues
+          }
+        ]
+      };
+      setBarChartData(result);
+
     } catch (error) {
-      console.error("Error fetching data: ", error);
-      alert(error.response.data.message);
+      // Error handling is already done in fetchSummaryYearMonth
     }
   };
 
-  const handlefilter = () => {
-
-    if (!year || !month) {
-      setFilterSummarys(summarys);
-      let mymoney = 0;
-      for (let i = 0; i < summarys.length; i++) {
-      mymoney = mymoney + summarys[i].amount;
-    }
-    setMoney(mymoney);
-      return;
-    }
-
-    const filtered = summarys.filter((summary) => { 
-      return summary.Year === Number(year) && summary.Month === Number(month);
-    });
-    setFilterSummarys(filtered);
-
-    let mymoney = 0;
-    for (let i = 0; i < filtered.length; i++) {
-      mymoney = mymoney + filtered[i].amount;
-    }
-    setMoney(mymoney);
-
-  }
+  const handlePress = () => {
+    navigation.navigate("MonthlyDetial", { year, month });
+  };
 
   useEffect(() => {
-    fetchSummary();
+    loadSummary();
   }, []);
 
   useFocusEffect(
     useCallback(() => {
       async function check() {
         const isExpire = await Checkexp();
-        console.log(isExpire);
-        if(!isExpire){
-          fetchSummary();
+        if (!isExpire) {
+          loadSummary();
           setYear('');
           setMonth('');
-        }
-        else{
+        } else {
           navigation.navigate("Login");
-        } 
+        }
       }
       check();
     }, [])
   );
 
   useEffect(() => {
-    handlefilter();    
-  }, [year, month]);
+    if (isPress) {
+      handlePress();
+      setIsPress(false);
+    }
+
+  }, [isPress]);
+
 
   return (
     <GlobalLayout>
-      <Center flex={1} px="3">
-        <VStack space={4} w="90%" maxW="400px">
-          <HStack space={3} justifyContent="center">
-            <Input 
-              w="45%" 
-              variant="outline" 
-              placeholder="Year" 
-              onChangeText={v => setYear(v)} 
-              value={year} 
-              keyboardType='numeric' 
-              style={isLargeText && styles.largeText}
-            />
-            <Input 
-              w="45%" 
-              variant="outline" 
-              placeholder="Month" 
-              onChangeText={v => setMonth(v)} 
-              value={month} 
-              keyboardType='numeric' 
-              style={isLargeText && styles.largeText}
-            />
-          </HStack>
-          <Center>
-            <Text fontSize="2xl" bold style={isLargeText && styles.largeText}>Total: $ {money.toFixed()} AUD</Text>
-          </Center>
-          <ScrollView >
-            <VStack space={4} alignItems="center">
-              {filtersummarys.map((summary, index) => (
-                <Box key={index} w="100%" bg="#D8AE7E" p="4" rounded="md" shadow={3}>
-                  <HStack justifyContent="space-between">
-                    <VStack space={2}>
-                      <HStack alignItems="center" space={3} justifyContent="space-between">
-                        <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#fff" />
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]} bold> Year: {summary.Year}</Text>
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]} bold> Month: {summary.Month}</Text>
-                      </HStack>
-                      <HStack alignItems="center">
-                        <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#fff" />
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]}> Category: {summary.category}</Text>
-                      </HStack>
-                      <HStack alignItems="center">
-                        <Icon as={MaterialIcons} name="attach-money" size="sm" color="#fff" />
-                        <Text style={[styles.summaryText, isLargeText && styles.largeText]}> Amount: ${summary.amount}</Text>
-                      </HStack>
-                    </VStack>
-                  </HStack>
-                </Box>
-              ))}
-            </VStack>
-          </ScrollView>
-        </VStack>
+      <VStack>
+        <BarChart
+          data={barChartData}
+          width={(Dimensions.get("window").width)}
+          height={245}
+          fromZero={true}
+          yAxisLabel="$"
+          chartConfig={{
+            backgroundColor: "#D5F0C1",
+            backgroundGradientToOpacity: "0.5",
+            backgroundGradientFrom: "#96B6C5",
+            backgroundGradientTo: "#5F5D9C",
+            decimalPlaces: 2,
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16
+            },
+            propsForDots: {
+              r: "6",
+              strokeWidth: "2",
+              stroke: "#80BCBD"
+            }
+          }}
+
+          verticalLabelRotation={0}
+          showValuesOnTopOfBars={true}
+        />
+      </VStack>
+      <Center>
+        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Details</Text>
       </Center>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <VStack space={4} w="90%" maxW="400px" mx="auto">
+          <VStack space={4} alignItems="center">
+            {summarys.map((data, index) => (
+              <Pressable onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
+                <HStack justifyContent="space-between">
+                  <VStack space={2}>
+                    <HStack alignItems="center" space={3} justifyContent="space-between">
+                      <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#EEE0C9" />
+                      <Text style={[styles.summaryText, globalStyles.text]}>Year: {data.year}</Text>
+                      <Icon as={MaterialIcons} name="calendar-month" size="sm" color="#EEE0C9" />
+                      <Text style={[styles.summaryText, globalStyles.text]}>Month: {data.month.toString().padStart(2, '0')}</Text>
+                    </HStack>
+                    <HStack alignItems="center">
+                      <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
+                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount.toFixed(2)}</Text>
+                    </HStack>
+                  </VStack>
+                </HStack>
+              </Pressable>
+            ))}
+          </VStack>
+        </VStack>
+      </ScrollView>
     </GlobalLayout>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   summaryText: {
-    color: "#fff",
+    color: "#001C30",
+  },
+  categoryText: {
+    color: "#176B87",
+    marginLeft: 8,
+  },
+  amountText: {
+    color: "#3C5B6F",
     marginLeft: 8,
   },
   largeText: {

@@ -1,125 +1,208 @@
 import { Text, StyleSheet } from "react-native";
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { Center, ScrollView, VStack, HStack, Button, Icon, IconButton } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
-import { AntDesign } from '@expo/vector-icons';
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useState, useEffect, useCallback } from "react";
+import { FlatList, VStack, HStack, Button, Icon, IconButton, Input, Box, useToast } from "native-base";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { GlobalLayout } from "../components/Layout";
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import Checkexp from "../components/CheckExp";
+import { createCategory, deleteCategory, initialCategory, fetchCategory } from "../components/ApiController";
+import { GlobalStyles } from "../styles/global";
+import MyAlert from "../components/MyAlert";
 
 export default function CategoryScreen() {
   const [dataCategory, setDataCategories] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
-  const [isModify, setIsModify] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [categoryID, setcategoryID] = useState(0);
-  
-
-  const createCategory = async () => {
-    try {
-      const response = await axios.post('http://10.0.2.2:3000/api/category/create', {
-        name: 'Testttt',
-        user_id: '1'
-      });
-      console.log(response.data);
-      fetchCategory();
-      setIsCreate(false);
-    } catch (error) {
-      console.error('Error posting data:', error);
-    }
-  };
-
-  const deleteCategory = async () => {
-    try {
-      const response = await axios.delete(`http://10.0.2.2:3000/api/category/delete/${categoryID}`);
-      console.log(response.data);
-      fetchCategory();
-      setIsDelete(false);
-    } catch (error) {
-      console.error('Error posting data:', error);
-    }
-  };
-
-  const updateCategory = async () => {
-    console.log(categoryID);
-    try {
-      const response = await axios.put(`http://10.0.2.2:3000/api/category/modify/${categoryID}`, {
-        name: 'Play'
-      });
-      console.log(response.data);
-      fetchCategory();
-      setIsModify(false);
-    } catch (error) {
-      console.error('Error puting data:', error);
-    }
-  };
-
-  const fetchCategory = async () => {
-    const token = await AsyncStorage.getItem('jwtToken');
-    const headers = {
-      accept: "application/json",
-      "Content-Type" : "application/json",
-      Authorization: `Bearer ${token}`
-    }
-    try {
-      const category = await axios.get(`http://10.0.2.2:3000/api/category`, {headers});
-      console.log("category.data: ", category.data.categories);
-      setDataCategories(category.data.categories);
-    } catch (error) {
-      console.error("Error fetching data: ", error);
-      alert("Cannot connent database. Please try again later.");
-    }
-  };
+  const [isInitial, setIsInitial] = useState(false);
+  const [categoryID, setCategoryID] = useState(0);
+  const [categoryName, setCategoryName] = useState('');  
+  const navigation = useNavigation();
+  const toast = useToast();
+  const globalStyles = GlobalStyles();
 
   useEffect(() => {
-    fetchCategory();
+    loadCategories();
   }, []);
 
-  // useEffect(() => {
+  useEffect(() => {
+    if (isCreate) {
+      handleCreateCategory();
+      setIsCreate(false);
+      setCategoryName('');
+    }
 
-  //   if(isCreate === true){
-  //     createCategory();
-  //   }
+    if (isDelete) {
+      handleDeleteCategory();
+      setIsDelete(false);
+    }
 
-  //   if(isModify === true){
-  //     updateCategory();
-  //   }
+    if (isInitial) {
+      handleInitialCategory();
+      setIsInitial(false);
+    }
+  }, [isCreate, isDelete, isInitial]);
 
-  //   if(isDelete === true){
-  //     deleteCategory();
-  //   }
+  useFocusEffect(
+    useCallback(() => {
+      async function check() {
+        const isExpire = await Checkexp();
+        if (!isExpire) {
+          setCategoryName('');
+          loadCategories();
+        } else {
+          navigation.navigate("Login");
+        }
+      }
+      check();
+    }, [])
+  );
 
-  // }, [isCreate, isModify, isDelete]);
+  const loadCategories = async () => {
+    try {
+      const categories = await fetchCategory();
+      if (categories.length === 0) {
+        setIsInitial(true);
+      }
+      setDataCategories(categories);
+    } catch (error) {
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Cannot connect to database. Please try again later." variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+    }
+  };
 
+  const handleCreateCategory = async () => {
+    if (!categoryName) {
+      toast.show({
+        render: () => (
+          <MyAlert title="Warning" description="Please enter the category name" variant="subtle" status="warning" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+      return;
+    }
+    try {
+      await createCategory(categoryName);
+      loadCategories();
+      toast.show({
+        render: () => (
+          <MyAlert title="Success" description="Category created successfully" variant="top-accent" status="success" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+    } catch (error) {
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Error creating category:" variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
 
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    try {
+      await deleteCategory(categoryID);
+      loadCategories();
+      toast.show({
+        render: () => (
+          <MyAlert title="Success" description="Category deleted successfully" variant="top-accent" status="success" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+    } catch (error) {
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Error deleting category:" variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+    }
+  };
+
+  const handleInitialCategory = async () => {
+    try {
+      await initialCategory();
+      loadCategories();
+    } catch (error) {
+      toast.show({
+        render: () => (
+          <MyAlert title="Error" description="Error initializing category:" variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
+    }
+  };
+
+  const renderItem = ({ item }) => (
+    <Box m={1} p="4" bg="#96B6C5" shadow={2} mb={2} w="50%" >
+      <HStack justifyContent="space-between" alignItems="center">
+        <Text style={globalStyles.text}>{item.name}</Text>
+        <IconButton
+          icon={<Icon as={AntDesign} name="delete" size="sm" color="#A91D3A" />}
+          onPress={() => { setCategoryID(item.ID); setIsDelete(true); }}
+        />
+      </HStack>
+    </Box>
+  );
 
   return (
-    <Center>
-      {/* <Heading size="md">column</Heading> */}
-      <ScrollView>
-      {dataCategory.map((item) => (
-        <VStack display="flex" key={item.ID} mb="2.5" mt="1.5" direction="column" space={1}>
-          <Center display="flex" size="16" w="300px" h="50px" bg="primary.400" rounded="md" _text={{
-            color: 'warmGray.50',
-            fontWeight: 'medium'
-          }} shadow={'5'}>
-            <HStack>
-              <Text>{item.name}</Text>
-              <IconButton icon={<Icon as={AntDesign} name="edit" size="sm" />} onPress={() => { setcategoryID(item.ID); setIsModify(true); }} />
-              <IconButton icon={<Icon as={AntDesign} name="delete" size="sm" />} onPress={() => { setcategoryID(item.ID); setIsDelete(true); }}/>
-            </HStack>
-          </Center>
-        </VStack>
-      ))}
-      <Button key={1} leftIcon={<Icon as={Ionicons} name="add-circle-outline" size="sm" />} onPress={() => setIsCreate(true) } >Create</Button>
-      </ScrollView>
-      
-    </Center>
+    <GlobalLayout>
+      <VStack space={4} w="90%" maxW="400px" mx="auto" my={4}>
+        <HStack space={3} justifyContent="center" mb="4">
+          <Input
+            flex={1}
+            variant="outline"
+            placeholder="Enter a new category"
+            onChangeText={v => setCategoryName(v)}
+            value={categoryName}
+            style={globalStyles.text}
+          />
+          <Button
+            bg="#96B6C5"
+            colorScheme="teal"
+            leftIcon={<Icon as={Ionicons} name="add-circle-outline" size="sm" color="#EEE0C9" />}
+            onPress={() => { setIsCreate(true); setCategoryName(categoryName); }}
+          >
+            <Text style={globalStyles.text}>New</Text>
+          </Button>
+        </HStack>
+        <FlatList
+          data={dataCategory}
+          renderItem={renderItem}
+          keyExtractor={item => item.ID.toString()}
+          numColumns={2}
+          columnWrapperStyle={styles.columnWrapper}
+          contentContainerStyle={styles.contentContainer}
+        />
+      </VStack>
+    </GlobalLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  view: {
-    flexDirection: "row",
-    alignItems: "center",
+  columnWrapper: {
+    justifyContent: 'space-between',
+  },
+  contentContainer: {
+    alignItems: 'center',
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
 });
+

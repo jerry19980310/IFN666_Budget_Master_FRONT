@@ -1,34 +1,36 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground } from 'react-native';
-import { Input, Stack, Icon, Pressable, Box, Button } from 'native-base';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, ImageBackground, Alert, BackHandler } from 'react-native';
+import { Input, Stack, Icon, Pressable, Box, Button, useToast } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from "@expo/vector-icons";
-import { Alert, BackHandler } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import CheckExp from '../components/CheckExp';
-import { useMyTheme } from '../context/mytheme';
+import { GlobalStyles } from "../styles/global";
+import MyAlert from '../components/MyAlert';
 
 
 const LoginScreen = () => {
 
   const navigation = useNavigation();
-
   const [show, setShow] = useState(false);
-
   const [userName, setUserName] = useState('');
-
   const [password, setPassword] = useState('');
-
-  const { isLargeText } = useMyTheme();
+  const globalStyles = GlobalStyles();
+  const toast = useToast();
 
   const login = async () => {
 
     if(!userName || !password){
-      Alert.alert("Remind","Please enter username and password");
+      toast.show({
+        render: () => (
+          <MyAlert title="Warning" description="Please enter username and password" variant="left-accent" status="warning" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
       return;
     }
 
@@ -39,25 +41,32 @@ const LoginScreen = () => {
       });
 
       const token = response.data.token;
-      console.log(token);
-
       const decode = jwtDecode(token);
-
-      console.log(decode);
 
       await AsyncStorage.setItem('jwtToken', response.data.token);
       await AsyncStorage.setItem('userId', JSON.stringify(decode.tokenPayload.userId));
-      await AsyncStorage.setItem('username', decode.tokenPayload.username);
+      await AsyncStorage.setItem('username', (decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())).charAt(0).toUpperCase());
       await AsyncStorage.setItem('exp', JSON.stringify(decode.exp));
 
       navigation.navigate('Tabview')
 
-      alert(userName + ", Welcome back!!!");
-
+      toast.show({
+        render: () => (
+          <MyAlert title="Login Success" description={`Hello, ${userName} , Nice to see you again!`} variant="top-accent" status="success" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
       setUserName('');
       setPassword('');
     } catch (error) {
-      alert(error.response.data.message);
+      toast.show({
+        render: () => (
+          <MyAlert title="Login Failed" description={error.response.data.message} variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
     }
   };
 
@@ -67,7 +76,13 @@ const LoginScreen = () => {
       const token = await AsyncStorage.getItem('jwtToken');
       const userName = await AsyncStorage.getItem('username');
       if (token) {
-        alert(userName + ", Welcome back!!!");
+        toast.show({
+          render: () => (
+            <MyAlert title="Welcome Back" description={`Hi, ${userName} , Welcome back!`} variant="top-accent" status="info" />
+          ),
+          duration: 3000,
+          placement: "top"
+        });
         navigation.navigate('Tabview');
       }
     }
@@ -82,7 +97,6 @@ const LoginScreen = () => {
       else {
         checkLogin();
       }
-
     };
 
     check();
@@ -122,7 +136,7 @@ const LoginScreen = () => {
               placeholder="Username"
               onChangeText={setUserName}
               value={userName}
-              style={isLargeText && styles.largeText || styles.input}
+              style={globalStyles.text}
             />
             <Input
               w={styles.inputWidth}
@@ -135,11 +149,11 @@ const LoginScreen = () => {
               placeholder="Password"
               onChangeText={setPassword}
               value={password}
-              style={isLargeText && styles.largeText || styles.input}
+              style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={login} style={styles.button} _text={isLargeText && styles.largeText || styles.buttonText}>Login</Button>
-              <Button onPress={() => navigation.navigate('SignUp')} style={styles.button} _text={isLargeText && styles.largeText && styles.boldText|| styles.buttonText}>Sign Up</Button>
+              <Button onPress={login} style={styles.button} _text={globalStyles.text}>Login</Button>
+              <Button onPress={() => navigation.navigate('SignUp')} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
             </View>
           </Stack>
         </Box>

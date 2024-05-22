@@ -62,8 +62,6 @@ export default function HistoryScreen() {
     setFilterTransactions(filtered);
   };
 
-
-
   useEffect(() => {
     loadTransactions();
   }, []);
@@ -139,7 +137,7 @@ export default function HistoryScreen() {
                     </HStack>
                     <HStack alignItems="center" space={2}>
                       <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.amountText, globalStyles.text]}>${transaction.amount}</Text>
+                      <Text style={[styles.amountText, globalStyles.text]}>${transaction.amount.toFixed(2)}</Text>
                     </HStack>
                     <HStack alignItems="center" space={2}>
                       <Icon as={MaterialIcons} name="note" size="sm" color="#EEE0C9" />

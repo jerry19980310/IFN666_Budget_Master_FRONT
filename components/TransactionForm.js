@@ -1,6 +1,5 @@
-// TransactionForm.js
-import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { Text, Platform } from 'react-native';
 import { Box, Input, InputLeftAddon, InputRightAddon, InputGroup, VStack, Heading, Button, Icon, CheckIcon, Select, useToast } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import dayjs from 'dayjs';
@@ -22,7 +21,6 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
         setShowPicker(Platform.OS === 'ios');
         setDate(currentDate);
     };
-
 
     const handleSubmit = () => {
         if (!money || !category) {

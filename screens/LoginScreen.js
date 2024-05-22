@@ -9,27 +9,28 @@ import { jwtDecode } from "jwt-decode";
 import "core-js/stable/atob";
 import CheckExp from '../components/CheckExp';
 import { GlobalStyles } from "../styles/global";
+import MyAlert from '../components/MyAlert';
 
 
 const LoginScreen = () => {
 
   const navigation = useNavigation();
-
   const [show, setShow] = useState(false);
-
   const [userName, setUserName] = useState('');
-
   const [password, setPassword] = useState('');
-
   const globalStyles = GlobalStyles();
-
   const toast = useToast();
-
 
   const login = async () => {
 
     if(!userName || !password){
-      Alert.alert("Remind","Please enter username and password");
+      toast.show({
+        render: () => (
+          <MyAlert title="Warning" description="Please enter username and password" variant="left-accent" status="warning" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
       return;
     }
 
@@ -50,15 +51,22 @@ const LoginScreen = () => {
       navigation.navigate('Tabview')
 
       toast.show({
-        description: `Hello, ${userName} , Nice to see you again!`,
+        render: () => (
+          <MyAlert title="Login Success" description={`Hello, ${userName} , Nice to see you again!`} variant="top-accent" status="success" />
+        ),
         duration: 3000,
         placement: "top"
       });
-
       setUserName('');
       setPassword('');
     } catch (error) {
-      Alert.alert('ERROR',error.response.data.message);
+      toast.show({
+        render: () => (
+          <MyAlert title="Login Failed" description={error.response.data.message} variant="left-accent" status="error" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
     }
   };
 
@@ -69,7 +77,9 @@ const LoginScreen = () => {
       const userName = await AsyncStorage.getItem('username');
       if (token) {
         toast.show({
-          description: `Hi, ${userName} , Welcome back!`,
+          render: () => (
+            <MyAlert title="Welcome Back" description={`Hi, ${userName} , Welcome back!`} variant="top-accent" status="info" />
+          ),
           duration: 3000,
           placement: "top"
         });
@@ -87,7 +97,6 @@ const LoginScreen = () => {
       else {
         checkLogin();
       }
-
     };
 
     check();

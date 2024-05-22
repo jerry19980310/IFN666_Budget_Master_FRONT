@@ -22,38 +22,24 @@ export default function SummaryScreen() {
   const globalStyles = GlobalStyles();
   const navigation = useNavigation();
 
-  const handleGoBack = () => {
-    navigation.goBack();
-    setQueryYear('');
-    setQueryMonth('');
-    setFilterDatas([]);
-    setTotalAmount(0);
-    setPieData([]);
-
-  };
-
   const handleFilter = (dataList = datas) => {
     const filtered = dataList.filter(summary =>
       summary.year === Number(queryyear) && summary.month === Number(querymonth)
     );
     setFilterDatas(filtered);
     const totalAmount = filtered.reduce((sum, item) => sum + item.amount, 0);
-    setTotalAmount(totalAmount);
+    setTotalAmount(totalAmount.toFixed(2));
   };
-
 
   const loadCategories = async () => {
     try {
       const summary = await fetchSummaryCategory();
       setDatas(summary);
       handleFilter(summary);
-      
-      
     } catch (error) {
       // Error handling is done in fetchSummaryCategory
     }
   };
-
 
   useEffect(() => {
     loadCategories();
@@ -64,11 +50,9 @@ export default function SummaryScreen() {
   useEffect(() => {
     handlePieData();
     const piechart = handlePieData();
-      setPieData(piechart);
+    setPieData(piechart);
 
   }, [filterDatas]);
-
-
 
   useFocusEffect(
     useCallback(() => {
@@ -84,39 +68,36 @@ export default function SummaryScreen() {
     }, [navigation])
   );
 
-
-
   const generateRandomPastelColor = () => {
     const pastelColors = [
-      '#FFC0CB', // 粉红色
-      '#FFB6C1', // 浅粉红色
-      '#FF69B4', // 热粉色
-      '#DB7093', // 苍白的紫罗兰红色
-      '#FF1493', // 深粉色
-      '#FF00FF', // 紫红色
-      '#BA55D3', // 中紫罗兰色
-      '#9370DB', // 中紫色
-      '#DA70D6', // 浅紫色
-      '#DDA0DD', // 梅红色
-      '#EE82EE', // 紫罗兰色
-      '#D8BFD8', // 蓟色
-      '#DDA0DD', // 梅红色
-      '#E6E6FA', // 薰衣草色
-      '#B0E0E6', // 粉蓝色
-      '#ADD8E6', // 浅蓝色
-      '#87CEEB', // 天蓝色
-      '#87CEFA', // 淡蓝色
-      '#B0C4DE', // 浅钢蓝色
-      '#AFEEEE', // 浅绿色
-      '#00CED1', // 深浅绿色
-      '#48D1CC', // 适中的浅绿色
-      '#40E0D0', // 绿宝石色
-      '#E0FFFF', // 浅青色
+      '#FFC0CB',
+      '#FFB6C1',
+      '#FF69B4',
+      '#DB7093',
+      '#FF1493',
+      '#FF00FF',
+      '#BA55D3',
+      '#9370DB',
+      '#DA70D6',
+      '#DDA0DD',
+      '#EE82EE',
+      '#D8BFD8',
+      '#DDA0DD',
+      '#E6E6FA',
+      '#B0E0E6',
+      '#ADD8E6',
+      '#87CEEB',
+      '#87CEFA',
+      '#B0C4DE',
+      '#AFEEEE',
+      '#00CED1',
+      '#48D1CC',
+      '#40E0D0',
+      '#E0FFFF',
     ];
     return pastelColors[Math.floor(Math.random() * pastelColors.length)];
   };
-  
-  // 为数据生成颜色数组
+
   const generateColors = (num) => {
     const colors = [];
     for (let i = 0; i < num; i++) {
@@ -127,7 +108,6 @@ export default function SummaryScreen() {
 
   const colors = generateColors(filterDatas.length);
 
-  
   const handlePieData = () => {
     const pieData = filterDatas.map((item, index) => ({
       name: item.category,
@@ -136,29 +116,22 @@ export default function SummaryScreen() {
       legendFontColor: '#7F7F7F',
       legendFontSize: 15
     }));
-    // console.log(typeof(pieData[0].population));
     return pieData;
   };
-
-
-  // (((Number(item.amount)/totalAmount)*100).toFixed(1)).toString(),
-
-  // console.log((((pieData[0].population/totalAmount)*100).toFixed(1)).toString());
-
 
   return (
     <GlobalLayout>
       <Center>
-      <HStack alignItems="center" space={3} justifyContent="space-between">
-        <Icon as={MaterialIcons} name="calendar-month" size="lg" color="#EEE0C9" />
-        <Text style={[styles.summaryText, globalStyles.text]}>{queryyear}-{querymonth.toString().padStart(2, '0')}</Text>
-      </HStack>
+        <HStack alignItems="center" space={3} justifyContent="space-between">
+          <Icon as={MaterialIcons} name="calendar-month" size="lg" color="#EEE0C9" />
+          <Text style={[styles.summaryText, globalStyles.text]}>{queryyear}-{querymonth.toString().padStart(2, '0')}</Text>
+        </HStack>
       </Center>
 
       <VStack space={4} w="90%" maxW="400px" mx="auto" >
         <PieChart
           data={pieData}
-          width={(Dimensions.get("window").width)} // from react-native
+          width={(Dimensions.get("window").width)}
           height={245}
           chartConfig={{
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
@@ -171,7 +144,7 @@ export default function SummaryScreen() {
       </VStack>
 
       <Center>
-        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Total: $ {totalAmount.toFixed()} AUD</Text>
+        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Total: $ {totalAmount} AUD</Text>
 
       </Center>
 
@@ -188,7 +161,7 @@ export default function SummaryScreen() {
                     </HStack>
                     <HStack alignItems="center">
                       <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount}</Text>
+                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount.toFixed(2)}</Text>
                     </HStack>
                   </VStack>
                 </HStack>

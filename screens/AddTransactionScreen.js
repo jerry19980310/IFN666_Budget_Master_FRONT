@@ -1,4 +1,3 @@
-// TransactionScreen.js
 import React, { useEffect, useCallback } from "react";
 import { useState } from "react";
 import { Center, useToast } from "native-base";

@@ -28,7 +28,7 @@ export default function HomeScreen() {
       setSummarys(summaryData);
 
       const labels = summaryData.map(item => `${item.year}-${String(item.month).padStart(2, '0')}`);
-      const dataValues = summaryData.map(item => item.amount);
+      const dataValues = summaryData.map(item => item.amount.toFixed(2));
       const result = {
         labels: labels,
         datasets: [
@@ -45,8 +45,6 @@ export default function HomeScreen() {
   };
 
   const handlePress = () => {
-    console.log(year, month,"HOME");
-    
     navigation.navigate("MonthlyDetial", { year, month });
   };
 
@@ -71,76 +69,53 @@ export default function HomeScreen() {
   );
 
   useEffect(() => {
-    if (isPress){
+    if (isPress) {
       handlePress();
       setIsPress(false);
     }
-    
+
   }, [isPress]);
 
 
   return (
     <GlobalLayout>
       <VStack>
-      <BarChart
-        data={barChartData}
-        width={(Dimensions.get("window").width)} // from react-native
-        height={245}
-        fromZero={true}
-        yAxisLabel="$"
-        chartConfig={{
-          backgroundColor: "#D5F0C1",
-          backgroundGradientToOpacity: "0.5",
-          backgroundGradientFrom: "#96B6C5",
-          backgroundGradientTo: "#5F5D9C",
-          decimalPlaces: 2, // optional, defaults to 2dp
-          color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-          style: {
-            borderRadius: 16
-          },
-          propsForDots: {
-            r: "6",
-            strokeWidth: "2",
-            stroke: "#80BCBD"
-          }
-        }}
+        <BarChart
+          data={barChartData}
+          width={(Dimensions.get("window").width)}
+          height={245}
+          fromZero={true}
+          yAxisLabel="$"
+          chartConfig={{
+            backgroundColor: "#D5F0C1",
+            backgroundGradientToOpacity: "0.5",
+            backgroundGradientFrom: "#96B6C5",
+            backgroundGradientTo: "#5F5D9C",
+            decimalPlaces: 2,
+            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            style: {
+              borderRadius: 16
+            },
+            propsForDots: {
+              r: "6",
+              strokeWidth: "2",
+              stroke: "#80BCBD"
+            }
+          }}
 
-        verticalLabelRotation={0}
-        showValuesOnTopOfBars={true}
-      />
+          verticalLabelRotation={0}
+          showValuesOnTopOfBars={true}
+        />
       </VStack>
-      {/* <HStack space={3} justifyContent="center" mt="2">
-        <Input
-          w="45%"
-          variant="outline"
-          placeholder="Year"
-          onChangeText={v => setYear(v)}
-          value={year}
-          keyboardType='numeric'
-          style={globalStyles.text}
-        />
-        <Input
-          w="45%"
-          variant="outline"
-          placeholder="Month"
-          onChangeText={v => setMonth(v)}
-          value={month}
-          keyboardType='numeric'
-          style={globalStyles.text}
-        />
-      </HStack> */}
-  
       <Center>
-        {/* <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Total: $ {money.toFixed()} AUD</Text> */}
         <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Details</Text>
       </Center>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <VStack space={4} w="90%" maxW="400px" mx="auto">
           <VStack space={4} alignItems="center">
             {summarys.map((data, index) => (
-              <Pressable onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true)}} key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
-                {/* <Box key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}> */}
+              <Pressable onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
                     <HStack alignItems="center" space={3} justifyContent="space-between">
@@ -151,11 +126,10 @@ export default function HomeScreen() {
                     </HStack>
                     <HStack alignItems="center">
                       <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount}</Text>
+                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount.toFixed(2)}</Text>
                     </HStack>
                   </VStack>
                 </HStack>
-                {/* </Box> */}
               </Pressable>
             ))}
           </VStack>

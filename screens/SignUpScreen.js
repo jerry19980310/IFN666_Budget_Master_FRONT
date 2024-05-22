@@ -1,28 +1,33 @@
 import React from 'react';
 import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native';
-import { Input, Icon, Stack, Box, Pressable, Button } from 'native-base';
+import { Input, Icon, Stack, Box, Pressable, Button, useToast } from 'native-base';
 import { MaterialIcons } from "@expo/vector-icons";
 import axios from 'axios';
 import "core-js/stable/atob";
 import { useState } from 'react';
 import { GlobalStyles } from "../styles/global";
+import MyAlert from '../components/MyAlert';
 
 
 
 const SignUpScreen = ({ navigation }) => {
 
   const [show, setShow] = useState(false);
-  
   const [userName, setUserName] = useState('');
-
   const [password, setPassword] = useState('');
-
   const globalStyles = GlobalStyles();
+  const toast = useToast();
 
   const signup = async () => {
 
     if(!userName || !password){
-      Alert.alert("Remind","Please enter username and password");
+      toast.show({
+        render: () => (
+          <MyAlert title="Warning" description="Please enter username and password" variant="left-accent" status="warning" />
+        ),
+        duration: 3000,
+        placement: "top"
+      });
       return;
     }
     try {

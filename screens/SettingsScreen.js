@@ -1,10 +1,10 @@
 import { Text, Switch, View, StyleSheet } from "react-native";
-import { useState } from "react";
 import { GlobalLayout } from "../components/Layout";
 import { useMyTheme } from "../context/mytheme";
 import { GlobalStyles } from "../styles/global";
-import { Button } from "native-base";
+import { Button, useToast } from "native-base";
 import { useNavigation } from '@react-navigation/native';
+import MyAlert from "../components/MyAlert";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -14,12 +14,20 @@ export default function SettingsScreen() {
   const { isBoldText, setIsBoldText } = useMyTheme();
   const globalStyles = GlobalStyles();
   const navigation = useNavigation();
+  const toast = useToast();
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem('jwtToken');
     await AsyncStorage.removeItem('userId');
     await AsyncStorage.removeItem('username');
     await AsyncStorage.removeItem('exp');
+    toast.show({
+      render: () => (
+        <MyAlert title="Logout success" description="You have been logged out!" variant="left-accent" status="info" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
     navigation.navigate('Login');
   };
 

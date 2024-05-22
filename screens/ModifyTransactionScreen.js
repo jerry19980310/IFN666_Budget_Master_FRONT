@@ -1,4 +1,3 @@
-// ModifyTransactionScreen.js
 import React, { useEffect, useCallback, useState } from "react";
 import { useRoute, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Center, useToast } from "native-base";

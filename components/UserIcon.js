@@ -5,7 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserIcon = ({ userName }) => {
-    const initials = userName.charAt(0).toUpperCase();
+    const initials = userName.charAt(0);
     const navigation = useNavigation();
 
     const handleLogout = async () => {

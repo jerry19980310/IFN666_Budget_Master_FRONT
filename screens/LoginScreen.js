@@ -45,7 +45,7 @@ const LoginScreen = () => {
 
       await AsyncStorage.setItem('jwtToken', response.data.token);
       await AsyncStorage.setItem('userId', JSON.stringify(decode.tokenPayload.userId));
-      await AsyncStorage.setItem('username', decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase()));
+      await AsyncStorage.setItem('username', (decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())).charAt(0).toUpperCase());
       await AsyncStorage.setItem('exp', JSON.stringify(decode.exp));
 
       navigation.navigate('Tabview')

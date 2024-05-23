@@ -10,6 +10,7 @@ import "core-js/stable/atob";
 import CheckExp from '../components/CheckExp';
 import { GlobalStyles } from "../styles/global";
 import MyAlert from '../components/MyAlert';
+import { initialCategory, fetchCategory } from '../api/ApiController';
 
 
 const LoginScreen = () => {
@@ -21,6 +22,19 @@ const LoginScreen = () => {
   const globalStyles = GlobalStyles();
   const toast = useToast();
   const [loading, setLoading] = useState(false);
+
+  const handleInitialCategory = async () => {
+    try {
+      const categories = await fetchCategory();
+      if (categories.length === 0) {
+        await initialCategory();
+        console.log("Initial Category Created");
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error.response.data.message);
+    }
+  
+  };
 
   const login = async () => {
 
@@ -56,6 +70,8 @@ const LoginScreen = () => {
       await AsyncStorage.setItem('username', (decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())));
       await AsyncStorage.setItem('exp', JSON.stringify(decode.exp));
 
+      await handleInitialCategory();
+
       navigation.navigate('Tabview');
 
       const Name = decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
@@ -70,6 +86,7 @@ const LoginScreen = () => {
       setUserName('');
       setPassword('');
     } catch (error) {
+      console.log('Error posting data:', error);
       toast.show({
         render: () => (
           <MyAlert title="Login Failed" description={error.response?.data?.message || 'Cannot connect to database. Please try again later.'} variant="left-accent" status="error" />

@@ -7,7 +7,7 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import Checkexp from '../components/CheckExp';
 import { GlobalStyles } from '../styles/global';
 import { GlobalLayout } from '../components/Layout';
-import { fetchSummaryCategory } from '../components/ApiController';
+import { fetchSummaryCategory } from '../api/ApiController';
 import { PieChart } from 'react-native-chart-kit';
 
 export default function SummaryScreen() {
@@ -31,7 +31,7 @@ export default function SummaryScreen() {
     setTotalAmount(totalAmount.toFixed(2));
   };
 
-  const loadCategories = async () => {
+  const loadSummaryCategory = async () => {
     try {
       const summary = await fetchSummaryCategory();
       setDatas(summary);
@@ -42,9 +42,7 @@ export default function SummaryScreen() {
   };
 
   useEffect(() => {
-    loadCategories();
-    console.log("HIII");
-
+    loadSummaryCategory();
   }, []);
 
   useEffect(() => {
@@ -59,7 +57,7 @@ export default function SummaryScreen() {
       async function check() {
         const isExpire = await Checkexp();
         if (!isExpire) {
-          loadCategories();
+          loadSummaryCategory();
         } else {
           navigation.navigate('Login');
         }
@@ -70,30 +68,30 @@ export default function SummaryScreen() {
 
   const generateRandomPastelColor = () => {
     const pastelColors = [
-      '#FFC0CB',
-      '#FFB6C1',
-      '#FF69B4',
-      '#DB7093',
-      '#FF1493',
-      '#FF00FF',
-      '#BA55D3',
-      '#9370DB',
-      '#DA70D6',
-      '#DDA0DD',
-      '#EE82EE',
-      '#D8BFD8',
-      '#DDA0DD',
-      '#E6E6FA',
-      '#B0E0E6',
-      '#ADD8E6',
-      '#87CEEB',
-      '#87CEFA',
-      '#B0C4DE',
-      '#AFEEEE',
-      '#00CED1',
-      '#48D1CC',
-      '#40E0D0',
-      '#E0FFFF',
+      '#D6DAC8',
+      '#ECB176',
+      '#6F4E37',
+      '#C7B7A3',
+      '#B5C18E',
+      '#9CAFAA',
+      '#D37676',
+      '#F1EF99',
+      '#124076',
+      '#7F9F80',
+      '#B5C0D0',
+      '#EED3D9',
+      '#9B4444',
+      '#607274',
+      '#F8DFD4',
+      '#D5B4B4',
+      '#AD88C6',
+      '#B4B4B8',
+      '#DCBFFF',
+      '#FDCEDF',
+      '#FFAF45',
+      '#FFE382',
+      '#CAEDFF',
+      '#DB005B',
     ];
     return pastelColors[Math.floor(Math.random() * pastelColors.length)];
   };

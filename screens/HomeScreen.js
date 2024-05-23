@@ -5,7 +5,7 @@ import { GlobalStyles } from "../styles/global";
 import { Center, HStack, ScrollView, VStack, Icon, Pressable } from "native-base";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Checkexp from "../components/CheckExp";
-import { fetchSummaryYearMonth } from "../components/ApiController";
+import { fetchSummaryYearMonth } from "../api/ApiController";
 import { MaterialIcons } from '@expo/vector-icons';
 import { BarChart } from "react-native-chart-kit";
 
@@ -114,7 +114,8 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <VStack space={4} w="90%" maxW="400px" mx="auto">
           <VStack space={4} alignItems="center">
-            {summarys.map((data, index) => (
+          {summarys.length > 0 ? (
+            summarys.map((data, index) => (
               <Pressable onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
@@ -131,7 +132,10 @@ export default function HomeScreen() {
                   </VStack>
                 </HStack>
               </Pressable>
-            ))}
+            )
+          )) : (
+            <Text style={[globalStyles.text]}>Click Transaction button to create your first transaction</Text> )
+        }
           </VStack>
         </VStack>
       </ScrollView>

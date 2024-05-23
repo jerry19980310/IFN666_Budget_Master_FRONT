@@ -5,7 +5,7 @@ import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { GlobalLayout } from "../components/Layout";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Checkexp from "../components/CheckExp";
-import { createCategory, deleteCategory, initialCategory, fetchCategory } from "../components/ApiController";
+import { createCategory, deleteCategory, initialCategory, fetchCategory } from "../api/ApiController";
 import { GlobalStyles } from "../styles/global";
 import MyAlert from "../components/MyAlert";
 
@@ -14,6 +14,7 @@ export default function CategoryScreen() {
   const [isCreate, setIsCreate] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [isInitial, setIsInitial] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [categoryID, setCategoryID] = useState(0);
   const [categoryName, setCategoryName] = useState('');  
   const navigation = useNavigation();
@@ -58,6 +59,7 @@ export default function CategoryScreen() {
   );
 
   const loadCategories = async () => {
+    setIsLoading(true);
     try {
       const categories = await fetchCategory();
       if (categories.length === 0) {
@@ -72,6 +74,9 @@ export default function CategoryScreen() {
         duration: 3000,
         placement: "top"
       });
+    }
+    finally {
+      setIsLoading(false);
     }
   };
 
@@ -174,6 +179,7 @@ export default function CategoryScreen() {
             colorScheme="teal"
             leftIcon={<Icon as={Ionicons} name="add-circle-outline" size="sm" color="#EEE0C9" />}
             onPress={() => { setIsCreate(true); setCategoryName(categoryName); }}
+            isLoading={isLoading}
           >
             <Text style={globalStyles.text}>New</Text>
           </Button>

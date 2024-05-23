@@ -29,9 +29,11 @@ export default function AboutPage() {
     <GlobalLayout>
       <HStack space={3} justifyContent="center" mb="4">
         <Center flex={1} px="3" mt="4">
-          <Text>About Your App</Text>
+          <Text style={[globalStyles.heading]}>Budget Master</Text>
+          <Text style={[globalStyles.text]}>A comprehensive budget management application designed to help users efficiently track and manage their expenses. With intuitive tools for setting financial goals, monitoring spending patterns, and generating detailed reports</Text>
         </Center>
       </HStack>
+      <Text style={[globalStyles.heading]}>Open licence</Text>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <VStack space={4} w="90%" maxW="400px" mx="auto" alignItems="center">
           {data.map((licence, index) => (

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Center, useToast } from "native-base";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { GlobalLayout } from "../components/Layout";
-import { fetchCategory, newTransaction } from "../components/ApiController";
+import { fetchCategory, newTransaction } from "../api/ApiController";
 import Checkexp from "../components/CheckExp";
 import MyAlert from "../components/MyAlert";
 import TransactionForm from "../components/TransactionForm";

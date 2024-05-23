@@ -20,6 +20,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
   const globalStyles = GlobalStyles();
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
   const login = async () => {
 
@@ -34,7 +35,14 @@ const LoginScreen = () => {
       return;
     }
 
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    setLoading(true); // Start loading
+    
+
     try {
+
+      await delay(300);
       const response = await axios.post('http://10.0.2.2:3000/users/login', {
         username: userName,
         password: password
@@ -45,14 +53,16 @@ const LoginScreen = () => {
 
       await AsyncStorage.setItem('jwtToken', response.data.token);
       await AsyncStorage.setItem('userId', JSON.stringify(decode.tokenPayload.userId));
-      await AsyncStorage.setItem('username', (decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())).charAt(0).toUpperCase());
+      await AsyncStorage.setItem('username', (decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())));
       await AsyncStorage.setItem('exp', JSON.stringify(decode.exp));
 
-      navigation.navigate('Tabview')
+      navigation.navigate('Tabview');
+
+      const Name = decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
 
       toast.show({
         render: () => (
-          <MyAlert title="Login Success" description={`Hello, ${userName} , Nice to see you again!`} variant="top-accent" status="success" />
+          <MyAlert title="Login Success" description={`Hello, ${Name} , Nice to see you again!`} variant="top-accent" status="success" />
         ),
         duration: 3000,
         placement: "top"
@@ -62,11 +72,14 @@ const LoginScreen = () => {
     } catch (error) {
       toast.show({
         render: () => (
-          <MyAlert title="Login Failed" description={error.response.data.message} variant="left-accent" status="error" />
+          <MyAlert title="Login Failed" description={error.response?.data?.message || 'Cannot connect to database. Please try again later.'} variant="left-accent" status="error" />
         ),
         duration: 3000,
         placement: "top"
       });
+    }
+    finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -89,7 +102,6 @@ const LoginScreen = () => {
 
     async function check() {
       const isExpire = await CheckExp();
-      console.log(isExpire);
       if (isExpire) {
         navigation.navigate('Login');
         return;
@@ -152,7 +164,7 @@ const LoginScreen = () => {
               style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={login} style={styles.button} _text={globalStyles.text}>Login</Button>
+              <Button onPress={login} style={styles.button} _text={globalStyles.text} isLoading={loading} >Login</Button>
               <Button onPress={() => navigation.navigate('SignUp')} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
             </View>
           </Stack>

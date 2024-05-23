@@ -1,9 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Alert } from 'native-base';
+import { Alert, useToast } from 'native-base';
 import dayjs from 'dayjs';
+import MyAlert from '../components/MyAlert';
 
-const ROOT = 'http://10.0.2.2:3000'
+const ROOT = process.env.EXPO_PUBLIC_ROOT;
+
+
 
 const getHeaders = async () => {
   const token = await AsyncStorage.getItem('jwtToken');
@@ -20,8 +23,15 @@ export const fetchTransaction = async (user_id) => {
     const response = await axios.get(`${ROOT}/api/transaction/${user_id}`, { headers });
     return response.data.transactions;
   } catch (error) {
-    console.error("Error fetching data: ", error);
-    Alert.alert('ERROR', "Cannot connect to database. Please try again later.");
+    console.error("Error fetching data: ", error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert('ERROR', "Cannot connect to database. Please try again later.");
     throw error;
   }
 };
@@ -32,8 +42,15 @@ export const deleteTransaction = async (transactionID) => {
     const response = await axios.delete(`${ROOT}/api/transaction/delete/${transactionID}`, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error deleting data:', error);
-    Alert.alert('ERROR', error.response.data.message);
+    console.error('Error deleting data:', error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert('ERROR', error.response.data.message);
     throw error;
   }
 };
@@ -49,6 +66,13 @@ export const createCategory = async (categoryName) => {
     return response.data;
   } catch (error) {
     console.error('Error posting data:', error);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
     throw error;
   }
 };
@@ -59,7 +83,14 @@ export const deleteCategory = async (categoryID) => {
     const response = await axios.delete(`${ROOT}/api/category/delete/${categoryID}`, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error deleting data:', error);
+    console.error('Error deleting data:', error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
     throw error;
   }
 };
@@ -73,7 +104,15 @@ export const initialCategory = async () => {
     }, { headers });
     return response.data;
   } catch (error) {
-    Alert.alert("ERROR", error.response.data.message);
+    console.error('Error posting data:', error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert("ERROR", error.response.data.message);
     throw error;
   }
 };
@@ -85,8 +124,15 @@ export const fetchCategory = async () => {
     const response = await axios.get(`${ROOT}/api/category/${user_id}`, { headers });
     return response.data.categories;
   } catch (error) {
-    console.error("Error fetching data: ", error);
-    Alert.alert('ERROR', "Cannot connect to database. Please try again later.");
+    console.error("Error fetching data: ", error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert('ERROR', "Cannot connect to database. Please try again later.");
     throw error;
   }
 };
@@ -104,8 +150,15 @@ export const newTransaction = async (money, date, note, category) => {
     }, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error posting data:', error);
-    Alert.alert("ERROR", 'Error posting data. Please try again later.');
+    console.error('Error posting data:', error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert("ERROR", 'Error posting data. Please try again later.');
     throw error;
   }
 };
@@ -117,8 +170,15 @@ export const fetchSummaryYearMonth = async () => {
     const response = await axios.get(`${ROOT}/api/transaction/summarybyyearmonth/${user_id}`, { headers });
     return response.data.summary;
   } catch (error) {
-    console.error("Error fetching data: ", error);
-    Alert.alert('ERROR', error.response?.data?.message || 'Error fetching data. Please try again later.');
+    console.error("Error fetching data: ", error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert('ERROR', error.response?.data?.message || 'Error fetching data. Please try again later.');
     throw error;
   }
 };
@@ -131,7 +191,14 @@ export const fetchSummaryCategory = async () => {
     return response.data.summary;
   } catch (error) {
     console.error("Error fetching data: ", error);
-    Alert.alert('ERROR', error.response?.data?.message || 'Error fetching data. Please try again later.');
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert('ERROR', error.response?.data?.message || 'Error fetching data. Please try again later.');
     throw error;
   }
 };
@@ -143,7 +210,14 @@ export const updateTransaction = async (transactionID, transactionData) => {
     return response.data;
   } catch (error) {
     console.error('Error updating transaction:', error);
-    Alert.alert('ERROR', error.response.data.message);
+    toast.show({
+      render: () => (
+        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+      ),
+      duration: 3000,
+      placement: "top"
+    });
+    // Alert.alert('ERROR', error.response.data.message);
     throw error;
   }
 };

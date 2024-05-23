@@ -17,6 +17,7 @@ const SignUpScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const globalStyles = GlobalStyles();
   const toast = useToast();
+  const [loading, setLoading] = useState(false);
 
   const signup = async () => {
 
@@ -30,6 +31,9 @@ const SignUpScreen = ({ navigation }) => {
       });
       return;
     }
+    
+    setLoading(true);
+
     try {
       const response = await axios.post('http://10.0.2.2:3000/users/register', {
         username: userName,
@@ -45,6 +49,9 @@ const SignUpScreen = ({ navigation }) => {
     } catch (error) {
       
       Alert.alert("ERROR",error.response.data.message);
+    }
+    finally{
+      setLoading(false);
     }
 
   };
@@ -80,7 +87,7 @@ const SignUpScreen = ({ navigation }) => {
               style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={signup} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
+              <Button onPress={signup} style={styles.button} _text={globalStyles.text} isLoading={loading}>Sign Up</Button>
               <Button onPress={() => navigation.navigate('Login')} style={styles.button} _text={globalStyles.text}>Login</Button>
             </View>
           </Stack>

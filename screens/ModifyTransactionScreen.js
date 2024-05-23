@@ -4,7 +4,7 @@ import { Center, useToast } from "native-base";
 import dayjs from 'dayjs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GlobalLayout } from "../components/Layout";
-import { fetchCategory, updateTransaction } from "../components/ApiController";
+import { fetchCategory, updateTransaction } from "../api/ApiController";
 import Checkexp from "../components/CheckExp";
 import TransactionForm from "../components/TransactionForm";
 import MyAlert from "../components/MyAlert";

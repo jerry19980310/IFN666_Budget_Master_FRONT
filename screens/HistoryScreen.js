@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Checkexp from "../components/CheckExp";
 import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
-import { fetchTransaction, deleteTransaction } from "../components/ApiController";
+import { fetchTransaction, deleteTransaction } from "../api/ApiController";
 
 export default function HistoryScreen() {
   const [dataTransactions, setDataTransactions] = useState([]);
@@ -38,7 +38,6 @@ export default function HistoryScreen() {
 
   const handleDeleteTransaction = async () => {
     try {
-      console.log(transactionID);
       await deleteTransaction(transactionID);
       await loadTransactions();
       setIsDelete(false);
@@ -158,7 +157,7 @@ export default function HistoryScreen() {
               </Box>
             ))
           ) : (
-            <Text style={[styles.summaryText, globalStyles.text]}>No transactions found for the selected date.</Text>
+            <Text style={[styles.summaryText, globalStyles.text]}>No transactions found for the selected year and month.</Text>
           )}
         </VStack>
       </ScrollView>

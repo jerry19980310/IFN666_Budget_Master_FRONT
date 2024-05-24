@@ -18,13 +18,7 @@ export default function TransactionScreen() {
       const categories = await fetchCategory();
       setDataCategories(categories);
     } catch (error) {
-      toast.show({
-        render: () => (
-          <MyAlert title="Error" description="Cannot connect to database. Please try again later." variant="left-accent" status="error" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
+
     }
   };
 
@@ -49,9 +43,9 @@ export default function TransactionScreen() {
     }
   };
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  // useEffect(() => {
+  //   loadCategories();
+  // }, []);
 
   useFocusEffect(
     useCallback(() => {

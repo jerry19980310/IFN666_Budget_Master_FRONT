@@ -61,9 +61,9 @@ export default function HistoryScreen() {
     setFilterTransactions(filtered);
   };
 
-  useEffect(() => {
-    loadTransactions();
-  }, []);
+  // useEffect(() => {
+  //   loadTransactions();
+  // }, []);
 
   useEffect(() => {
     if (isDelete) {

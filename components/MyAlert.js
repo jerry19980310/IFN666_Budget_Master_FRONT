@@ -1,9 +1,7 @@
-import { Alert, VStack, HStack, Icon, useToast, Text } from "native-base";
-import { AntDesign } from '@expo/vector-icons';
+import { Alert, VStack, HStack, Text } from "native-base";
 
 const MyAlert = ({ title, description, variant, status }) => {
 
-  const toast = useToast();
 
   return (
 

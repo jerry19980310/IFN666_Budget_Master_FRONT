@@ -19,11 +19,13 @@ export default function HomeScreen() {
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
   const [isPress, setIsPress] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
   const globalStyles = GlobalStyles();
 
   const loadSummary = async () => {
     try {
+      setIsLoading(true);
       const summaryData = await fetchSummaryYearMonth();
       setSummarys(summaryData);
 
@@ -41,6 +43,8 @@ export default function HomeScreen() {
 
     } catch (error) {
       // Error handling is already done in fetchSummaryYearMonth
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -48,18 +52,12 @@ export default function HomeScreen() {
     navigation.navigate("MonthlyDetial", { year, month });
   };
 
-  useEffect(() => {
-    loadSummary();
-  }, []);
-
   useFocusEffect(
     useCallback(() => {
       async function check() {
         const isExpire = await Checkexp();
         if (!isExpire) {
           loadSummary();
-          setYear('');
-          setMonth('');
         } else {
           navigation.navigate("Login");
         }
@@ -116,7 +114,7 @@ export default function HomeScreen() {
           <VStack space={4} alignItems="center">
           {summarys.length > 0 ? (
             summarys.map((data, index) => (
-              <Pressable onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
+              <Pressable isLoading={isLoading} onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
                     <HStack alignItems="center" space={3} justifyContent="space-between">

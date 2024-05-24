@@ -21,6 +21,7 @@ export default function SummaryScreen() {
   const [pieData, setPieData] = useState([]);
   const globalStyles = GlobalStyles();
   const navigation = useNavigation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFilter = (dataList = datas) => {
     const filtered = dataList.filter(summary =>
@@ -33,11 +34,14 @@ export default function SummaryScreen() {
 
   const loadSummaryCategory = async () => {
     try {
+      setIsLoading(true);
       const summary = await fetchSummaryCategory();
       setDatas(summary);
       handleFilter(summary);
     } catch (error) {
       // Error handling is done in fetchSummaryCategory
+    }finally{
+      setIsLoading(false);
     }
   };
 
@@ -52,19 +56,19 @@ export default function SummaryScreen() {
 
   }, [filterDatas]);
 
-  useFocusEffect(
-    useCallback(() => {
-      async function check() {
-        const isExpire = await Checkexp();
-        if (!isExpire) {
-          loadSummaryCategory();
-        } else {
-          navigation.navigate('Login');
-        }
-      }
-      check();
-    }, [navigation])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     async function check() {
+  //       const isExpire = await Checkexp();
+  //       if (!isExpire) {
+  //         loadSummaryCategory();
+  //       } else {
+  //         navigation.navigate('Login');
+  //       }
+  //     }
+  //     check();
+  //   }, [navigation])
+  // );
 
   const generateRandomPastelColor = () => {
     const pastelColors = [

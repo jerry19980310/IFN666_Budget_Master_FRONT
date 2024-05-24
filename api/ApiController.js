@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { Alert, useToast } from 'native-base';
+import { Toast } from 'native-base';
 import dayjs from 'dayjs';
 import MyAlert from '../components/MyAlert';
 
@@ -23,10 +23,10 @@ export const fetchTransaction = async (user_id) => {
     const response = await axios.get(`${ROOT}/api/transaction/${user_id}`, { headers });
     return response.data.transactions;
   } catch (error) {
-    console.error("Error fetching data: ", error.response.data.message);
-    toast.show({
+    // console.error("Error fetching data: ", error.response?.data?.message || "Cannot connect to database. Please try again later.");
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"
@@ -42,15 +42,13 @@ export const deleteTransaction = async (transactionID) => {
     const response = await axios.delete(`${ROOT}/api/transaction/delete/${transactionID}`, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error deleting data:', error.response.data.message);
-    toast.show({
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"
     });
-    // Alert.alert('ERROR', error.response.data.message);
     throw error;
   }
 };
@@ -65,10 +63,10 @@ export const createCategory = async (categoryName) => {
     }, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error posting data:', error);
-    toast.show({
+    // console.error('Error posting data:', error.response?.data?.message || "Cannot connect to database. Please try again later.");
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"
@@ -83,10 +81,10 @@ export const deleteCategory = async (categoryID) => {
     const response = await axios.delete(`${ROOT}/api/category/delete/${categoryID}`, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error deleting data:', error.response.data.message);
-    toast.show({
+    // console.error('Error deleting data:', error.response?.data?.message || "Cannot connect to database. Please try again later.");
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"
@@ -104,10 +102,10 @@ export const initialCategory = async () => {
     }, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error posting data:', error.response.data.message);
-    toast.show({
+    // console.error('Error posting data:', error.response?.data?.message || "Cannot connect to database. Please try again later.");
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"
@@ -124,10 +122,10 @@ export const fetchCategory = async () => {
     const response = await axios.get(`${ROOT}/api/category/${user_id}`, { headers });
     return response.data.categories;
   } catch (error) {
-    console.error("Error fetching data: ", error.response.data.message);
-    toast.show({
+    // console.error("Error fetching data: ", error.response?.data?.message || "Cannot connect to database. Please try again later.");
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"
@@ -150,10 +148,10 @@ export const newTransaction = async (money, date, note, category) => {
     }, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error posting data:', error.response.data.message);
-    toast.show({
+    // console.error('Error posting data:', error.response?.data?.message || "Cannot connect to database. Please try again later.");
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"
@@ -170,10 +168,14 @@ export const fetchSummaryYearMonth = async () => {
     const response = await axios.get(`${ROOT}/api/transaction/summarybyyearmonth/${user_id}`, { headers });
     return response.data.summary;
   } catch (error) {
-    console.error("Error fetching data: ", error.response.data.message);
-    toast.show({
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert
+          title="ERROR"
+          description={error.response?.data?.message || "Cannot connect to database. Please try again later."}
+          variant="left-accent"
+          status="error"
+        />
       ),
       duration: 3000,
       placement: "top"
@@ -187,17 +189,24 @@ export const fetchSummaryCategory = async () => {
   const user_id = await AsyncStorage.getItem('userId');
   const headers = await getHeaders();
   try {
+    // console.log("1")
     const response = await axios.get(`${ROOT}/api/transaction/summarybycategory/${user_id}`, { headers });
     return response.data.summary;
   } catch (error) {
-    console.error("Error fetching data: ", error);
-    toast.show({
+    // console.log("2")
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert
+          title="ERROR"
+          description={error.response?.data?.message || "Cannot connect to database. Please try again later."}
+          variant="left-accent"
+          status="error"
+        />
       ),
       duration: 3000,
       placement: "top"
     });
+    // console.log("3")
     // Alert.alert('ERROR', error.response?.data?.message || 'Error fetching data. Please try again later.');
     throw error;
   }
@@ -209,10 +218,10 @@ export const updateTransaction = async (transactionID, transactionData) => {
     const response = await axios.put(`${ROOT}/api/transaction/modify/${transactionID}`, transactionData, { headers });
     return response.data;
   } catch (error) {
-    console.error('Error updating transaction:', error);
-    toast.show({
+    // console.error('Error updating transaction:', error.response?.data?.message || "Cannot connect to database. Please try again later.");
+    Toast.show({
       render: () => (
-        <MyAlert title="ERROR" description= {error.response?.data?.message} variant="left-accent" status="error" />
+        <MyAlert title="ERROR" description= {error.response?.data?.message || "Cannot connect to database. Please try again later."} variant="left-accent" status="error" />
       ),
       duration: 3000,
       placement: "top"

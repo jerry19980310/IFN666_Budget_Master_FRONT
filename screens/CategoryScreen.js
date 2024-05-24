@@ -21,15 +21,30 @@ export default function CategoryScreen() {
   const toast = useToast();
   const globalStyles = GlobalStyles();
 
-  useEffect(() => {
-    loadCategories();
-  }, []);
+  // useEffect(() => {
+  //   loadCategories();
+  //   console.log("Callback1");
+  // }, []);
 
   useEffect(() => {
     if (isCreate) {
-      handleCreateCategory();
-      setIsCreate(false);
-      setCategoryName('');
+      if(!categoryName){
+        toast.show({
+          render: () => (
+            <MyAlert title="Warning" description="Please enter the category name" variant="subtle" status="warning" />
+          ),
+          duration: 3000,
+          placement: "top"
+        });
+        setIsCreate(false);
+        return;
+      }
+      else{
+        handleCreateCategory();
+        setIsCreate(false);
+        setCategoryName('');
+      }
+      
     }
 
     if (isDelete) {

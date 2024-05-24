@@ -44,8 +44,8 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
 
     return (
         <VStack space={4} w="90%" maxW="400px">
-            <Box>
-                <Heading size="md" mb={2} style={globalStyles.heading}>Amount</Heading>
+            <Box mt={3} pt={2}>
+                <Heading size="md" mb={1} pt={3} style={globalStyles.heading}>Amount</Heading>
                 <InputGroup>
                     <InputLeftAddon children={"$"} />
                     <Input
@@ -60,8 +60,8 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
                 </InputGroup>
             </Box>
 
-            <Box>
-                <Heading size="md" mb={2} style={globalStyles.heading}>Category</Heading>
+            <Box >
+                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>Category</Heading>
                 <Select
                     selectedValue={category}
                     minWidth="200"
@@ -82,7 +82,7 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
             </Box>
 
             <Box>
-                <Heading size="md" mb={2} style={globalStyles.heading}>Date</Heading>
+                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>Date</Heading>
                 <Button
                     variant="outline"
                     onPress={() => setShowPicker(true)}
@@ -100,7 +100,7 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
             </Box>
 
             <Box>
-                <Heading size="md" mb={2} style={globalStyles.heading}>Note</Heading>
+                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>Note</Heading>
                 <Input
                     variant="outline"
                     placeholder="Enter note"

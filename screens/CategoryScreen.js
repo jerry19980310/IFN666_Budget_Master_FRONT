@@ -1,4 +1,4 @@
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, Dimensions } from "react-native";
 import { useState, useEffect, useCallback } from "react";
 import { FlatList, VStack, HStack, Button, Icon, IconButton, Input, Box, useToast } from "native-base";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
@@ -165,22 +165,31 @@ export default function CategoryScreen() {
     }
   };
 
-  const renderItem = ({ item }) => (
-    <Box m={1} p="4" bg="#96B6C5" shadow={2} mb={2} w="50%" >
-      <HStack justifyContent="space-between" alignItems="center">
-        <Text style={globalStyles.text}>{item.name}</Text>
-        <IconButton
+  const renderItem = ({ item , index}) => {
+
+    const { width } = Dimensions.get('window');
+    const itemWidth = (width - 32) / 2; // Adjust based on margins and padding
+    const isOddItem = index % 2 !== 0;
+    return (
+      // style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]}
+      <Box rounded="md" style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]} >
+    {/* <Box  flex={0.5} mb={1} bg="#96B6C5" shadow={2} rounded="md" w="50" h={70} justifyContent="center" alignItems="space-between" m={1}> */}
+      <HStack justifyContent="center" alignItems="center" w="100%">
+        <Text style={[globalStyles.text, { flex: 1 }]}>{item.name}</Text>
+        <IconButton p={3}
           icon={<Icon as={AntDesign} name="delete" size="sm" color="#A91D3A" />}
           onPress={() => { setCategoryID(item.ID); setIsDelete(true); }}
         />
       </HStack>
     </Box>
-  );
+    )
 
+  };
+  
   return (
     <GlobalLayout>
-      <VStack space={4} w="90%" maxW="400px" mx="auto" my={4}>
-        <HStack space={3} justifyContent="center" mb="4">
+      <VStack space={4} justifyContent="center" w="90%" maxW="400px" mx="auto" my={2}>
+        <HStack space={3} justifyContent="center" mb="2">
           <Input
             flex={1}
             variant="outline"
@@ -199,7 +208,10 @@ export default function CategoryScreen() {
             <Text style={globalStyles.text}>New</Text>
           </Button>
         </HStack>
-        <FlatList
+        
+      </VStack>
+      <Box >
+      <FlatList
           data={dataCategory}
           renderItem={renderItem}
           keyExtractor={item => item.ID.toString()}
@@ -207,23 +219,84 @@ export default function CategoryScreen() {
           columnWrapperStyle={styles.columnWrapper}
           contentContainerStyle={styles.contentContainer}
         />
-      </VStack>
+      </Box>
+      
     </GlobalLayout>
   );
 }
+  const styles = StyleSheet.create({
+    columnWrapper: {
+      justifyContent: 'space-between',
+      paddingHorizontal: '3%',
+    },
+    contentContainer: {
+      paddingVertical: '5%',
+      justifyContent: 'space-between',
+      paddingBottom: 10,  // 增加底部的間隔
+    },
+    item: {
+      backgroundColor: '#96B6C5',
+      padding: 10,
+      marginVertical: 6,
+      justifyContent: 'center',
+      alignItems: 'center',
+      rounded: 'md',
+    },
+  });
 
-const styles = StyleSheet.create({
-  columnWrapper: {
-    justifyContent: 'space-between',
-  },
-  contentContainer: {
-    alignItems: 'center',
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-});
 
+
+
+
+
+// import React from 'react';
+// import { View, FlatList, Text, StyleSheet, Dimensions } from 'react-native';
+
+// const data = [
+//   { id: '1', title: 'Item 1' },
+//   { id: '2', title: 'Item 2' },
+//   { id: '3', title: 'Item 3' },
+//   { id: '4', title: 'Item 4' },
+//   { id: '5', title: 'Item 5' },
+//   { id: '6', title: 'Item 6' },
+//   { id: '7', title: 'Item 7' },
+
+//   // Add more items as needed
+// ];
+
+// const renderItem = ({ item, index }) => {
+//   const { width } = Dimensions.get('window');
+//   const itemWidth = (width - 32) / 2; // Adjust based on margins and padding
+//   const isOddItem = index % 2 !== 0;
+
+//   return (
+//     <View style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]}>
+//       <Text>{item.title}</Text>
+//     </View>
+//   );
+// };
+
+// const keyExtractor = item => item.id;
+
+// const CategoryScreen = () => {
+//   return (
+//     <FlatList
+//       data={data}
+//       renderItem={renderItem}
+//       keyExtractor={keyExtractor}
+//       numColumns={2}
+//     />
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   item: {
+//     backgroundColor: '#f9c2ff',
+//     padding: 20,
+//     marginVertical: 8,
+//     justifyContent: 'center',
+//     alignItems: 'center',
+//   },
+// });
+
+// export default CategoryScreen;

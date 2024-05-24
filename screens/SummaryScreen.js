@@ -134,7 +134,7 @@ export default function SummaryScreen() {
         <PieChart
           data={pieData}
           width={(Dimensions.get("window").width)}
-          height={245}
+          height={240}
           chartConfig={{
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           }}
@@ -145,9 +145,8 @@ export default function SummaryScreen() {
         />
       </VStack>
 
-      <Center>
+      <Center m="3">
         <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Total: $ {totalAmount} AUD</Text>
-
       </Center>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -179,7 +178,7 @@ export default function SummaryScreen() {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1,
+    // flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

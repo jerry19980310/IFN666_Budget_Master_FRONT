@@ -106,7 +106,7 @@ export default function HomeScreen() {
           showValuesOnTopOfBars={true}
         />
       </VStack>
-      <Center>
+      <Center m="2" >
         <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Details</Text>
       </Center>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -143,7 +143,7 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1,
+    // flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

@@ -1,56 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native';
 import { Input, Icon, Stack, Box, Pressable, Button, useToast } from 'native-base';
 import { MaterialIcons } from "@expo/vector-icons";
-import axios from 'axios';
-import "core-js/stable/atob";
-import { useState } from 'react';
 import { GlobalStyles } from "../styles/global";
-import MyAlert from '../components/MyAlert';
-
-
+import { signup } from '../auth/Auth';
 
 const SignUpScreen = ({ navigation }) => {
-
   const [show, setShow] = useState(false);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const globalStyles = GlobalStyles();
   const toast = useToast();
-
-  const signup = async () => {
-
-    if(!userName || !password){
-      toast.show({
-        render: () => (
-          <MyAlert title="Warning" description="Please enter username and password" variant="left-accent" status="warning" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
-      return;
-    }
-    try {
-      const response = await axios.post('http://10.0.2.2:3000/users/register', {
-        username: userName,
-        password: password
-      });
-
-      if(response.data.success){
-        Alert.alert("Remind",response.data.message + "Please login to continue.");
-        setUserName('');
-        setPassword('');
-        navigation.navigate('Login');
-      }
-    } catch (error) {
-      
-      Alert.alert("ERROR",error.response.data.message);
-    }
-
-  };
-
-
-
+  const [loading, setLoading] = useState(false);
 
   return (
     <ImageBackground source={require('../assets/MySplash1.jpeg')} style={styles.background}>
@@ -80,7 +41,7 @@ const SignUpScreen = ({ navigation }) => {
               style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={signup} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
+              <Button onPress={() => signup(userName, password, toast, navigation, setLoading)} style={styles.button} _text={globalStyles.text} isLoading={loading}>Sign Up</Button>
               <Button onPress={() => navigation.navigate('Login')} style={styles.button} _text={globalStyles.text}>Login</Button>
             </View>
           </Stack>
@@ -120,7 +81,7 @@ const styles = StyleSheet.create({
     color: '#333'
   },
   inputWidth: {
-    base: "100%", 
+    base: "100%",
     md: "100%"
   },
   input: {
@@ -129,7 +90,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%', 
+    width: '100%',
     marginTop: 20
   },
   button: {

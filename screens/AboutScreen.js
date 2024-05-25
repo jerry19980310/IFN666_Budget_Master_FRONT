@@ -1,14 +1,17 @@
 import React from 'react';
 import { Text, Linking, StyleSheet } from 'react-native';
-import licensesData from '../licenses'; // Import licenses.json file
+import licensesData from '../licenses';
 import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
 import { Center, ScrollView, VStack, HStack, Box, Icon } from "native-base";
 import { MaterialIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
 
 export default function AboutPage() {
 
   const globalStyles = GlobalStyles();
+  const { t } = useTranslation();
 
   const Link = ({ url, style, children }) => (
     <Text
@@ -27,27 +30,34 @@ export default function AboutPage() {
   return (
 
     <GlobalLayout>
-      <HStack space={3} justifyContent="center" mb="4">
-        <Center flex={1} px="3" mt="4">
-          <Text>About Your App</Text>
+      <HStack space={3} justifyContent="center" mb="2">
+        <Center flex={1} px="2">
+          <Text style={[globalStyles.heading]}>{t('budget_master')}</Text>
+          <Text style={[globalStyles.text]}>{t('intro')}</Text>
         </Center>
       </HStack>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <HStack space={3} justifyContent="center" mb="3">
+        <Center flex={1} px="2" mt="3">
+          <Text style={[globalStyles.heading]}>{t('open_licence')}</Text>
+        </Center>
+
+      </HStack>
+      <ScrollView contentContainerStyle={styles.scrollContainer} >
         <VStack space={4} w="90%" maxW="400px" mx="auto" alignItems="center">
           {data.map((licence, index) => (
-            <Box key={index} p="4" bg="#96B6C5" rounded="md" shadow={2} mb={2} w="100%">
+            <Box key={index} p="3" bg="#616161" rounded="md" shadow={2} mb={2} w="100%">
               <HStack justifyContent="space-between" alignItems="center">
                 <VStack space={2} w="70%">
                   <HStack alignItems="center" space={2}>
-                    <Icon as={MaterialIcons} name="date-range" size="sm" color="#EEE0C9" />
-                    <Text style={[globalStyles.text]}>{licence.packageName}</Text>
+                    <Icon as={MaterialCommunityIcons} name="license" size="md" color="#EEE0C9" />
+                    <Text style={[globalStyles.text, styles.text]}>{licence.packageName}</Text>
                   </HStack>
                   <HStack alignItems="center" space={2}>
-                    <Icon as={MaterialIcons} name="category" size="sm" color="#EEE0C9" />
-                    <Text style={[globalStyles.text]}>{licence.packageInfo.licenses}</Text>
+                    <Icon as={MaterialIcons} name="category" size="md" color="#EEE0C9" />
+                    <Text style={[globalStyles.text, { color: '#f2f2b0' }]}>{licence.packageInfo.licenses}</Text>
                   </HStack>
                   <HStack alignItems="center" space={2}>
-                    <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
+                    <Icon as={MaterialIcons} name="link" size="md" color="#EEE0C9" />
                     <Link url={licence.packageInfo.licenseUrl} style={styles.link}>{licence.packageInfo.licenseUrl}</Link>
                   </HStack>
                 </VStack>
@@ -89,7 +99,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   link: {
-    color: 'blue',
+    color: '#2ca9e1',
     textDecorationLine: 'underline',
+  },
+  text: {
+    color: '#f9f9f9',
   },
 });

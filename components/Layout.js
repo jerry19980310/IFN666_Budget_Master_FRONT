@@ -14,11 +14,11 @@ export function GlobalLayout({ children }) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F1F0E8",
+    backgroundColor: "#eff7ff",
   },
   container: {
     flex: 1,
-    backgroundColor: "#F1F0E8",
+    backgroundColor: "#eff7ff",
     width: "100%",
     alignSelf: "center",
   },

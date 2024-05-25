@@ -4,13 +4,14 @@ import { useRoute } from '@react-navigation/native';
 import { Box, Center, HStack, ScrollView, VStack, Icon } from "native-base";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import Checkexp from '../components/CheckExp';
+import { useTranslation } from 'react-i18next';
 import { GlobalStyles } from '../styles/global';
 import { GlobalLayout } from '../components/Layout';
-import { fetchSummaryCategory } from '../components/ApiController';
+import { fetchSummaryCategory } from '../functions/ApiController';
 import { PieChart } from 'react-native-chart-kit';
 
 export default function SummaryScreen() {
+  const { t } = useTranslation();
   const route = useRoute();
   const { year, month } = route.params;
   const [datas, setDatas] = useState([]);
@@ -18,9 +19,10 @@ export default function SummaryScreen() {
   const [querymonth, setQueryMonth] = useState(month);
   const [filterDatas, setFilterDatas] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [pieData, setPieData] = useState([]);
   const globalStyles = GlobalStyles();
-  const navigation = useNavigation();
+
 
   const handleFilter = (dataList = datas) => {
     const filtered = dataList.filter(summary =>
@@ -31,20 +33,21 @@ export default function SummaryScreen() {
     setTotalAmount(totalAmount.toFixed(2));
   };
 
-  const loadCategories = async () => {
+  const loadSummaryCategory = async () => {
     try {
+      setIsLoading(true);
       const summary = await fetchSummaryCategory();
       setDatas(summary);
       handleFilter(summary);
     } catch (error) {
       // Error handling is done in fetchSummaryCategory
+    }finally{
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    loadCategories();
-    console.log("HIII");
-
+    loadSummaryCategory();
   }, []);
 
   useEffect(() => {
@@ -54,50 +57,38 @@ export default function SummaryScreen() {
 
   }, [filterDatas]);
 
-  useFocusEffect(
-    useCallback(() => {
-      async function check() {
-        const isExpire = await Checkexp();
-        if (!isExpire) {
-          loadCategories();
-        } else {
-          navigation.navigate('Login');
-        }
-      }
-      check();
-    }, [navigation])
-  );
-
-  const generateRandomPastelColor = () => {
-    const pastelColors = [
-      '#FFC0CB',
-      '#FFB6C1',
-      '#FF69B4',
-      '#DB7093',
-      '#FF1493',
-      '#FF00FF',
-      '#BA55D3',
-      '#9370DB',
-      '#DA70D6',
-      '#DDA0DD',
-      '#EE82EE',
-      '#D8BFD8',
-      '#DDA0DD',
-      '#E6E6FA',
-      '#B0E0E6',
-      '#ADD8E6',
-      '#87CEEB',
-      '#87CEFA',
-      '#B0C4DE',
-      '#AFEEEE',
-      '#00CED1',
-      '#48D1CC',
-      '#40E0D0',
-      '#E0FFFF',
-    ];
-    return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+  let pastelColors = [
+    "#ffadad",
+    "#ffadd6",
+    "#ffadff",
+    "#d6adff",
+    "#adadff",
+    "#add6ff",
+    "#adffff",
+    "#adffd6",
+    "#adffad",
+    "#d6ffad",
+    "#ffffad",
+    "#ffd6ad"
+  ];
+  
+  let colorIndex = 0;
+  
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
   };
-
+  
+  shuffleArray(pastelColors);
+  
+  const generateRandomPastelColor = () => {
+    const color = pastelColors[colorIndex];
+    colorIndex = (colorIndex + 1) % pastelColors.length;
+    return color;
+  };
+  
   const generateColors = (num) => {
     const colors = [];
     for (let i = 0; i < num; i++) {
@@ -123,7 +114,7 @@ export default function SummaryScreen() {
     <GlobalLayout>
       <Center>
         <HStack alignItems="center" space={3} justifyContent="space-between">
-          <Icon as={MaterialIcons} name="calendar-month" size="lg" color="#EEE0C9" />
+          <Icon as={MaterialIcons} name="calendar-month" size="lg" color="#b2cbe4" />
           <Text style={[styles.summaryText, globalStyles.text]}>{queryyear}-{querymonth.toString().padStart(2, '0')}</Text>
         </HStack>
       </Center>
@@ -132,7 +123,7 @@ export default function SummaryScreen() {
         <PieChart
           data={pieData}
           width={(Dimensions.get("window").width)}
-          height={245}
+          height={240}
           chartConfig={{
             color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
           }}
@@ -143,25 +134,24 @@ export default function SummaryScreen() {
         />
       </VStack>
 
-      <Center>
-        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Total: $ {totalAmount} AUD</Text>
-
+      <Center m="3">
+        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>{t('total')}: $ {totalAmount} AUD</Text>
       </Center>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <VStack space={4} w="90%" maxW="400px" mx="auto">
           <VStack space={4} alignItems="center">
             {filterDatas.map((data, index) => (
-              <Box key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
+              <Box key={index} w="100%" bg="#b2cbe4" p="4" rounded="md" shadow={1}>
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
                     <HStack alignItems="center">
-                      <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.categoryText, globalStyles.text]}>Category: {data.category}</Text>
+                      <Icon as={MaterialCommunityIcons} name="tag-outline" size="lg" color="#EEE0C9" />
+                      <Text style={[styles.categoryText, globalStyles.text]}>{t('category')}: {data.category}</Text>
                     </HStack>
                     <HStack alignItems="center">
-                      <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount.toFixed(2)}</Text>
+                      <Icon as={MaterialIcons} name="attach-money" size="lg" color="#EEE0C9" />
+                      <Text style={[styles.amountText, globalStyles.text]}>{t('amount')}: ${data.amount.toFixed(2)}</Text>
                     </HStack>
                   </VStack>
                 </HStack>
@@ -177,7 +167,7 @@ export default function SummaryScreen() {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1,
+    // flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

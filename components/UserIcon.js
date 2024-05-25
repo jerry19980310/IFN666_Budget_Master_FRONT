@@ -1,12 +1,15 @@
-
 import { Text } from 'react-native';
-import { Box, Pressable, Actionsheet, useDisclose, Center } from 'native-base';
+import { Box, Pressable, Actionsheet, useDisclose, Center, Divider } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { GlobalStyles } from '../styles/global';
+import { useTranslation } from 'react-i18next';
 
 const UserIcon = ({ userName }) => {
+    const { t } = useTranslation();
     const initials = userName.charAt(0);
     const navigation = useNavigation();
+    const globalStyles = GlobalStyles();
 
     const handleLogout = async () => {
         await AsyncStorage.removeItem('jwtToken');
@@ -14,6 +17,10 @@ const UserIcon = ({ userName }) => {
         await AsyncStorage.removeItem('username');
         await AsyncStorage.removeItem('exp');
         navigation.navigate('Login');
+    };
+
+    const handleAbout = async () => {
+        navigation.navigate('About');
     };
 
     const {
@@ -26,7 +33,7 @@ const UserIcon = ({ userName }) => {
         <Center>
             <Pressable onPress={onOpen}>
                 <Box
-                    bg="primary.500"
+                    bg="#00587A"
                     width={10}
                     height={10}
                     borderRadius={20}
@@ -42,12 +49,14 @@ const UserIcon = ({ userName }) => {
             <Actionsheet isOpen={isOpen} onClose={onClose} hideDragIndicator >
                 <Actionsheet.Content borderTopRadius="0">
                     <Box w="100%" h={60} px={4} justifyContent="center">
-                        <Text fontSize="16" color="gray.500" _dark={{ color: 'gray.300' }}>
+                        <Text style={globalStyles.heading} color="gray.500" _dark={{ color: 'gray.300' }}>
                             Hi, {userName}
                         </Text>
                     </Box>
-                    <Actionsheet.Item onPress={handleLogout}>Logout</Actionsheet.Item>
-                    <Actionsheet.Item onPress={onClose}>Cancel</Actionsheet.Item>
+                    <Actionsheet.Item onPress={handleAbout}>{t('about')}</Actionsheet.Item>
+                    <Actionsheet.Item onPress={handleLogout}>{t('logout')}</Actionsheet.Item>
+                    <Divider mt={2} mb={2} />
+                    <Actionsheet.Item onPress={onClose}>{t('cancel')}</Actionsheet.Item>
                 </Actionsheet.Content>
             </Actionsheet>
         </Center>

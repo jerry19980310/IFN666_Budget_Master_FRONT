@@ -3,75 +3,22 @@ import { View, Text, StyleSheet, ImageBackground, Alert, BackHandler } from 'rea
 import { Input, Stack, Icon, Pressable, Box, Button, useToast } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { MaterialIcons } from "@expo/vector-icons";
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from "jwt-decode";
-import "core-js/stable/atob";
-import CheckExp from '../components/CheckExp';
+import CheckExp from '../auth/CheckExp';
 import { GlobalStyles } from "../styles/global";
 import MyAlert from '../components/MyAlert';
-
+import { login } from '../auth/Auth'; // Import the login function
 
 const LoginScreen = () => {
-
   const navigation = useNavigation();
   const [show, setShow] = useState(false);
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const globalStyles = GlobalStyles();
   const toast = useToast();
-
-  const login = async () => {
-
-    if(!userName || !password){
-      toast.show({
-        render: () => (
-          <MyAlert title="Warning" description="Please enter username and password" variant="left-accent" status="warning" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
-      return;
-    }
-
-    try {
-      const response = await axios.post('http://10.0.2.2:3000/users/login', {
-        username: userName,
-        password: password
-      });
-
-      const token = response.data.token;
-      const decode = jwtDecode(token);
-
-      await AsyncStorage.setItem('jwtToken', response.data.token);
-      await AsyncStorage.setItem('userId', JSON.stringify(decode.tokenPayload.userId));
-      await AsyncStorage.setItem('username', (decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase())).charAt(0).toUpperCase());
-      await AsyncStorage.setItem('exp', JSON.stringify(decode.exp));
-
-      navigation.navigate('Tabview')
-
-      toast.show({
-        render: () => (
-          <MyAlert title="Login Success" description={`Hello, ${userName} , Nice to see you again!`} variant="top-accent" status="success" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
-      setUserName('');
-      setPassword('');
-    } catch (error) {
-      toast.show({
-        render: () => (
-          <MyAlert title="Login Failed" description={error.response.data.message} variant="left-accent" status="error" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-
     const checkLogin = async () => {
       const token = await AsyncStorage.getItem('jwtToken');
       const userName = await AsyncStorage.getItem('username');
@@ -89,12 +36,10 @@ const LoginScreen = () => {
 
     async function check() {
       const isExpire = await CheckExp();
-      console.log(isExpire);
       if (isExpire) {
         navigation.navigate('Login');
         return;
-      }
-      else {
+      } else {
         checkLogin();
       }
     };
@@ -111,7 +56,7 @@ const LoginScreen = () => {
           onPress: () => null,
           style: 'cancel',
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        { text: 'YES', onPress: () => BackHandler.exitApp() },
       ]);
       return true;
     };
@@ -152,7 +97,7 @@ const LoginScreen = () => {
               style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={login} style={styles.button} _text={globalStyles.text}>Login</Button>
+              <Button onPress={() => login(userName, password, toast, navigation, setLoading)} style={styles.button} _text={globalStyles.text} isLoading={loading} >Login</Button>
               <Button onPress={() => navigation.navigate('SignUp')} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
             </View>
           </Stack>
@@ -192,7 +137,7 @@ const styles = StyleSheet.create({
     color: '#333'
   },
   inputWidth: {
-    base: "100%", 
+    base: "100%",
     md: "100%"
   },
   input: {
@@ -201,12 +146,12 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%', 
+    width: '100%',
   },
   button: {
     flex: 1,
     marginHorizontal: 5,
-    backgroundColor: '#406E8E' 
+    backgroundColor: '#406E8E'
   },
   buttonText: {
     color: 'white'
@@ -219,7 +164,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   boldText: {
-    fontWeight : "bold",
+    fontWeight: "bold",
   }
 });
 

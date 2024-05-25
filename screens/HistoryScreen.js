@@ -1,4 +1,3 @@
-// HistoryScreen.js
 import { Text, StyleSheet } from "react-native";
 import dayjs from "dayjs";
 import { useState, useEffect, useCallback } from "react";
@@ -7,12 +6,14 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Checkexp from "../components/CheckExp";
+import Checkexp from "../auth/CheckExp";
 import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
-import { fetchTransaction, deleteTransaction } from "../components/ApiController";
+import { fetchTransaction, deleteTransaction } from "../functions/ApiController";
+import { useTranslation } from 'react-i18next';
 
 export default function HistoryScreen() {
+  const { t } = useTranslation();
   const [dataTransactions, setDataTransactions] = useState([]);
   const [filterTransactions, setFilterTransactions] = useState([]);
   const [transactionID, setTransactionID] = useState(0);
@@ -38,7 +39,6 @@ export default function HistoryScreen() {
 
   const handleDeleteTransaction = async () => {
     try {
-      console.log(transactionID);
       await deleteTransaction(transactionID);
       await loadTransactions();
       setIsDelete(false);
@@ -61,10 +61,6 @@ export default function HistoryScreen() {
     });
     setFilterTransactions(filtered);
   };
-
-  useEffect(() => {
-    loadTransactions();
-  }, []);
 
   useEffect(() => {
     if (isDelete) {
@@ -103,7 +99,7 @@ export default function HistoryScreen() {
         <Input
           w="45%"
           variant="outline"
-          placeholder="Year"
+          placeholder={t('year')}
           onChangeText={v => setYear(v)}
           value={year}
           keyboardType='numeric'
@@ -112,35 +108,35 @@ export default function HistoryScreen() {
         <Input
           w="45%"
           variant="outline"
-          placeholder="Month"
+          placeholder={t('month')}
           onChangeText={v => setMonth(v)}
           value={month}
           keyboardType='numeric'
           style={globalStyles.text}
         />
       </HStack>
-      <Center flex={1} px="3" mt="4"></Center>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <Center flex={1} px="3" mt="1"></Center>
+      <ScrollView contentContainerStyle={styles.scrollContainer} contentOffset={{ x: 0, y: 0 }}>
         <VStack space={4} w="90%" maxW="400px" mx="auto" alignItems="center">
           {filterTransactions.length > 0 ? (
             filterTransactions.map(transaction => (
-              <Box key={transaction.ID} p="4" bg="#B3C8CF" rounded="md" shadow={2} mb={2} w="100%">
+              <Box key={transaction.ID} p="4" pt={3} pb={3} bg="#b8cde6" rounded="lg" shadow={2} w="100%">
                 <HStack justifyContent="space-between" alignItems="center">
                   <VStack space={2} w="70%">
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="date-range" size="sm" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="date-range" size="lg" color="#ffffff" />
                       <Text style={[styles.summaryText, globalStyles.text]}>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
                     </HStack>
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="category" size="sm" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="category" size="lg" color="#ffffff" />
                       <Text style={[styles.categoryText, globalStyles.text]}>{transaction.category}</Text>
                     </HStack>
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="attach-money" size="lg"  color="#ffffff" />
                       <Text style={[styles.amountText, globalStyles.text]}>${transaction.amount.toFixed(2)}</Text>
                     </HStack>
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="note" size="sm" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="note" size="lg"  color="#ffffff" />
                       <Text style={[styles.summaryText, globalStyles.text]}>{transaction.note}</Text>
                     </HStack>
                   </VStack>
@@ -158,7 +154,7 @@ export default function HistoryScreen() {
               </Box>
             ))
           ) : (
-            <Text style={[styles.summaryText, globalStyles.text]}>No transactions found for the selected date.</Text>
+            <Text style={[styles.summaryText, globalStyles.text]}>{t('no_transaction')}</Text>
           )}
         </VStack>
       </ScrollView>
@@ -168,7 +164,7 @@ export default function HistoryScreen() {
 
 const styles = StyleSheet.create({
   scrollContainer: {
-    flexGrow: 1,
+    // flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

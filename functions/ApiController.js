@@ -6,8 +6,6 @@ import MyAlert from '../components/MyAlert';
 
 const ROOT = process.env.EXPO_PUBLIC_ROOT;
 
-
-
 const getHeaders = async () => {
   const token = await AsyncStorage.getItem('jwtToken');
   return {

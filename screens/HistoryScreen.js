@@ -6,10 +6,10 @@ import { AntDesign, MaterialIcons } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Checkexp from "../components/CheckExp";
+import Checkexp from "../auth/CheckExp";
 import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
-import { fetchTransaction, deleteTransaction } from "../api/ApiController";
+import { fetchTransaction, deleteTransaction } from "../functions/ApiController";
 import { useTranslation } from 'react-i18next';
 
 export default function HistoryScreen() {

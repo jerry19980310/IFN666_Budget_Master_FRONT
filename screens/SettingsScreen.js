@@ -37,7 +37,7 @@ export default function SettingsScreen() {
     <GlobalLayout>
       <VStack space={4} p={4}>
         <VStack space={2}>
-          <Text style={globalStyles.text}>{t('text')}:</Text>
+          <Text style={globalStyles.heading}>{t('text')}:</Text>
           <HStack space={3} alignItems="center">
             <Text style={globalStyles.text}>{t('large')}</Text>
             <Switch
@@ -64,7 +64,7 @@ export default function SettingsScreen() {
           </HStack>
         </VStack>
         <VStack space={2}>
-          <Text style={globalStyles.text}>{t('language')}:</Text>
+          <Text style={globalStyles.heading}>{t('language')}:</Text>
           <Select
             selectedValue={lang}
             minWidth="200"

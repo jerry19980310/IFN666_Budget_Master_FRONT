@@ -24,4 +24,4 @@ const MyAlert = ({ title, description, variant, status }) => {
 
 };
 
-  export default MyAlert;
+export default MyAlert;

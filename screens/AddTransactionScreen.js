@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Center, useToast } from "native-base";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { GlobalLayout } from "../components/Layout";
-import { fetchCategory, newTransaction } from "../api/ApiController";
-import Checkexp from "../components/CheckExp";
+import { fetchCategory, newTransaction } from "../functions/ApiController";
+import Checkexp from "../auth/CheckExp";
 import MyAlert from "../components/MyAlert";
 import TransactionForm from "../components/TransactionForm";
 
@@ -33,19 +33,10 @@ export default function TransactionScreen() {
         placement: "top"
       });
     } catch (error) {
-      toast.show({
-        render: () => (
-          <MyAlert title="Something wrong" description="Error creating transaction:" variant="left-accent" status="error" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
+      // Error handling is done in newTransaction
     }
   };
 
-  // useEffect(() => {
-  //   loadCategories();
-  // }, []);
 
   useFocusEffect(
     useCallback(() => {

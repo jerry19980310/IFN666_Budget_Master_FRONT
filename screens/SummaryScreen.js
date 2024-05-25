@@ -7,7 +7,7 @@ import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { GlobalStyles } from '../styles/global';
 import { GlobalLayout } from '../components/Layout';
-import { fetchSummaryCategory } from '../api/ApiController';
+import { fetchSummaryCategory } from '../functions/ApiController';
 import { PieChart } from 'react-native-chart-kit';
 
 export default function SummaryScreen() {
@@ -57,19 +57,6 @@ export default function SummaryScreen() {
 
   }, [filterDatas]);
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     async function check() {
-  //       const isExpire = await Checkexp();
-  //       if (!isExpire) {
-  //         loadSummaryCategory();
-  //       } else {
-  //         navigation.navigate('Login');
-  //       }
-  //     }
-  //     check();
-  //   }, [navigation])
-  // );
   let pastelColors = [
     "#ffadad",
     "#ffadd6",
@@ -94,7 +81,6 @@ export default function SummaryScreen() {
     }
   };
   
-  // Shuffle colors initially
   shuffleArray(pastelColors);
   
   const generateRandomPastelColor = () => {
@@ -103,7 +89,6 @@ export default function SummaryScreen() {
     return color;
   };
   
-
   const generateColors = (num) => {
     const colors = [];
     for (let i = 0; i < num; i++) {

@@ -4,8 +4,8 @@ import { FlatList, VStack, HStack, Button, Icon, IconButton, Input, Box, useToas
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import { GlobalLayout } from "../components/Layout";
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import Checkexp from "../components/CheckExp";
-import { createCategory, deleteCategory, initialCategory, fetchCategory } from "../api/ApiController";
+import Checkexp from "../auth/CheckExp";
+import { createCategory, deleteCategory, initialCategory, fetchCategory } from "../functions/ApiController";
 import { GlobalStyles } from "../styles/global";
 import MyAlert from "../components/MyAlert";
 import { useTranslation } from 'react-i18next';
@@ -18,19 +18,14 @@ export default function CategoryScreen() {
   const [isInitial, setIsInitial] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [categoryID, setCategoryID] = useState(0);
-  const [categoryName, setCategoryName] = useState('');  
+  const [categoryName, setCategoryName] = useState('');
   const navigation = useNavigation();
   const toast = useToast();
   const globalStyles = GlobalStyles();
 
-  // useEffect(() => {
-  //   loadCategories();
-  //   console.log("Callback1");
-  // }, []);
-
   useEffect(() => {
     if (isCreate) {
-      if(!categoryName){
+      if (!categoryName) {
         toast.show({
           render: () => (
             <MyAlert title="Warning" description="Please enter the category name" variant="subtle" status="warning" />
@@ -41,12 +36,11 @@ export default function CategoryScreen() {
         setIsCreate(false);
         return;
       }
-      else{
+      else {
         handleCreateCategory();
         setIsCreate(false);
         setCategoryName('');
       }
-      
     }
 
     if (isDelete) {
@@ -84,13 +78,7 @@ export default function CategoryScreen() {
       }
       setDataCategories(categories);
     } catch (error) {
-      toast.show({
-        render: () => (
-          <MyAlert title="Error" description="Cannot connect to database. Please try again later." variant="left-accent" status="error" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
+      // Error handling is done in fetchCategory
     }
     finally {
       setIsLoading(false);
@@ -119,13 +107,7 @@ export default function CategoryScreen() {
         placement: "top"
       });
     } catch (error) {
-      toast.show({
-        render: () => (
-          <MyAlert title="Error" description="Error creating category:" variant="left-accent" status="error" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
+      // Error handling is done in createCategory
 
     }
   };
@@ -142,13 +124,7 @@ export default function CategoryScreen() {
         placement: "top"
       });
     } catch (error) {
-      toast.show({
-        render: () => (
-          <MyAlert title="Error" description="Error deleting category:" variant="left-accent" status="error" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
+      // Error handling is done in deleteCategory
     }
   };
 
@@ -157,39 +133,32 @@ export default function CategoryScreen() {
       await initialCategory();
       loadCategories();
     } catch (error) {
-      toast.show({
-        render: () => (
-          <MyAlert title="Error" description="Error initializing category:" variant="left-accent" status="error" />
-        ),
-        duration: 3000,
-        placement: "top"
-      });
+     // Error handling is done in initialCategory
     }
   };
 
-  const renderItem = ({ item , index}) => {
+  const renderItem = ({ item, index }) => {
 
     const { width } = Dimensions.get('window');
-    const itemWidth = (width - 32) / 2; // Adjust based on margins and padding
+    const itemWidth = (width - 32) / 2;
     const isOddItem = index % 2 !== 0;
     return (
-      // style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]}
       <Box rounded="md" style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]} >
-      <HStack justifyContent="space-between" alignItems="center" w="100%">
-        <Text style={[globalStyles.text, { flexShrink: 1 }]}>
-          {index + 1}. {item.name}
-        </Text>
-        <IconButton
-          p={1}
-          icon={<Icon as={AntDesign} name="delete" size="sm" color="#A91D3A" />}
-          onPress={() => { setCategoryID(item.ID); setIsDelete(true); }}
-        />
-      </HStack>
-    </Box>
-  );
+        <HStack justifyContent="space-between" alignItems="center" w="100%">
+          <Text style={[globalStyles.text, { flexShrink: 1 }]}>
+            {index + 1}. {item.name}
+          </Text>
+          <IconButton
+            p={1}
+            icon={<Icon as={AntDesign} name="delete" size="sm" color="#A91D3A" />}
+            onPress={() => { setCategoryID(item.ID); setIsDelete(true); }}
+          />
+        </HStack>
+      </Box>
+    );
 
   };
-  
+
   return (
     <GlobalLayout>
       <VStack space={4} justifyContent="center" w="90%" maxW="400px" mx="auto" my={2}>
@@ -212,10 +181,10 @@ export default function CategoryScreen() {
             <Text style={globalStyles.text}>{t('new')}</Text>
           </Button>
         </HStack>
-        
+
       </VStack>
       <Box >
-      <FlatList
+        <FlatList
           data={dataCategory}
           renderItem={renderItem}
           keyExtractor={item => item.ID.toString()}
@@ -224,83 +193,26 @@ export default function CategoryScreen() {
           contentContainerStyle={styles.contentContainer}
         />
       </Box>
-      
+
     </GlobalLayout>
   );
 }
-  const styles = StyleSheet.create({
-    columnWrapper: {
-      justifyContent: 'space-between',
-      paddingHorizontal: '3%',
-    },
-    contentContainer: {
-      paddingVertical: '5%',
-      justifyContent: 'space-between',
-      paddingBottom: 10,  // 增加底部的間隔
-    },
-    item: {
-      backgroundColor: '#cbb3e6',
-      padding: 10,
-      marginVertical: 6,
-      justifyContent: 'center',
-      alignItems: 'center',
-      rounded: 'md',
-    },
-  });
-
-
-
-
-
-
-// import React from 'react';
-// import { View, FlatList, Text, StyleSheet, Dimensions } from 'react-native';
-
-// const data = [
-//   { id: '1', title: 'Item 1' },
-//   { id: '2', title: 'Item 2' },
-//   { id: '3', title: 'Item 3' },
-//   { id: '4', title: 'Item 4' },
-//   { id: '5', title: 'Item 5' },
-//   { id: '6', title: 'Item 6' },
-//   { id: '7', title: 'Item 7' },
-
-//   // Add more items as needed
-// ];
-
-// const renderItem = ({ item, index }) => {
-//   const { width } = Dimensions.get('window');
-//   const itemWidth = (width - 32) / 2; // Adjust based on margins and padding
-//   const isOddItem = index % 2 !== 0;
-
-//   return (
-//     <View style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]}>
-//       <Text>{item.title}</Text>
-//     </View>
-//   );
-// };
-
-// const keyExtractor = item => item.id;
-
-// const CategoryScreen = () => {
-//   return (
-//     <FlatList
-//       data={data}
-//       renderItem={renderItem}
-//       keyExtractor={keyExtractor}
-//       numColumns={2}
-//     />
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   item: {
-//     backgroundColor: '#f9c2ff',
-//     padding: 20,
-//     marginVertical: 8,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
-
-// export default CategoryScreen;
+const styles = StyleSheet.create({
+  columnWrapper: {
+    justifyContent: 'space-between',
+    paddingHorizontal: '3%',
+  },
+  contentContainer: {
+    paddingVertical: '5%',
+    justifyContent: 'space-between',
+    paddingBottom: 10,
+  },
+  item: {
+    backgroundColor: '#cbb3e6',
+    padding: 10,
+    marginVertical: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    rounded: 'md',
+  },
+});

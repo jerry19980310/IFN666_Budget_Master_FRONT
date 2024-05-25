@@ -27,7 +27,7 @@ getLanguage().then((lang) => {
 i18n.use(initReactI18next).init({
   compatibilityJSON: 'v3',
   resources,
-  // fallbackLng: "en",
+  fallbackLng: "en",
   lng: lang,
   interpolation: {
     escapeValue: false,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, Linking, StyleSheet } from 'react-native';
-import licensesData from '../licenses'; // Import licenses.json file
+import licensesData from '../licenses';
 import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
 import { Center, ScrollView, VStack, HStack, Box, Icon } from "native-base";
@@ -37,7 +37,7 @@ export default function AboutPage() {
         </Center>
       </HStack>
       <HStack space={3} justifyContent="center" mb="3">
-      <Center flex={1} px="2" mt="3">
+        <Center flex={1} px="2" mt="3">
           <Text style={[globalStyles.heading]}>{t('open_licence')}</Text>
         </Center>
 
@@ -54,7 +54,7 @@ export default function AboutPage() {
                   </HStack>
                   <HStack alignItems="center" space={2}>
                     <Icon as={MaterialIcons} name="category" size="md" color="#EEE0C9" />
-                    <Text style={[globalStyles.text, { color: '#f2f2b0' } ]}>{licence.packageInfo.licenses}</Text>
+                    <Text style={[globalStyles.text, { color: '#f2f2b0' }]}>{licence.packageInfo.licenses}</Text>
                   </HStack>
                   <HStack alignItems="center" space={2}>
                     <Icon as={MaterialIcons} name="link" size="md" color="#EEE0C9" />

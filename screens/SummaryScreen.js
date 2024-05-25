@@ -69,36 +69,57 @@ export default function SummaryScreen() {
   //     check();
   //   }, [navigation])
   // );
-
-  const generateRandomPastelColor = () => {
-    const pastelColors = [
-      '#D6DAC8',
-      '#ECB176',
-      '#6F4E37',
-      '#C7B7A3',
-      '#B5C18E',
-      '#9CAFAA',
-      '#D37676',
-      '#F1EF99',
-      '#124076',
-      '#7F9F80',
-      '#B5C0D0',
-      '#EED3D9',
-      '#9B4444',
-      '#607274',
-      '#F8DFD4',
-      '#D5B4B4',
-      '#AD88C6',
-      '#B4B4B8',
-      '#DCBFFF',
-      '#FDCEDF',
-      '#FFAF45',
-      '#FFE382',
-      '#CAEDFF',
-      '#DB005B',
-    ];
-    return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+  let pastelColors = [
+    "#ffadad",
+    "#ffadd6",
+    "#ffadff",
+    "#d6adff",
+    "#adadff",
+    "#add6ff",
+    "#adffff",
+    "#adffd6",
+    "#adffad",
+    "#d6ffad",
+    "#ffffad",
+    "#ffd6ad"
+  ];
+  
+  let colorIndex = 0;
+  
+  const shuffleArray = (array) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
   };
+  
+  // Shuffle colors initially
+  shuffleArray(pastelColors);
+  
+  const generateRandomPastelColor = () => {
+    const color = pastelColors[colorIndex];
+    colorIndex = (colorIndex + 1) % pastelColors.length;
+    return color;
+  };
+  
+
+  // const generateRandomPastelColor = () => {
+  //   const pastelColors = [
+  //     "#ff9e9e",	
+  //     "#ff9ece",
+  //     "#ff9eff",	
+  //     "#ce9eff",	
+  //     "#9e9eff",
+  //     "#9eceff",
+  //     "#9effff",	
+  //     "#9effce",
+  //     "#9eff9e",	
+  //     "#ceff9e",	
+  //     "#ffff9e",
+  //     "#ffce9e",
+  //   ];
+  //   return pastelColors[Math.floor(Math.random() * pastelColors.length)];
+  // };
 
   const generateColors = (num) => {
     const colors = [];
@@ -125,7 +146,7 @@ export default function SummaryScreen() {
     <GlobalLayout>
       <Center>
         <HStack alignItems="center" space={3} justifyContent="space-between">
-          <Icon as={MaterialIcons} name="calendar-month" size="lg" color="#EEE0C9" />
+          <Icon as={MaterialIcons} name="calendar-month" size="lg" color="#b2cbe4" />
           <Text style={[styles.summaryText, globalStyles.text]}>{queryyear}-{querymonth.toString().padStart(2, '0')}</Text>
         </HStack>
       </Center>
@@ -153,7 +174,7 @@ export default function SummaryScreen() {
         <VStack space={4} w="90%" maxW="400px" mx="auto">
           <VStack space={4} alignItems="center">
             {filterDatas.map((data, index) => (
-              <Box key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
+              <Box key={index} w="100%" bg="#b2cbe4" p="4" rounded="md" shadow={1}>
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
                     <HStack alignItems="center">

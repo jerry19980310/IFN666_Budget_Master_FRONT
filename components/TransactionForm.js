@@ -112,7 +112,7 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
 
             {isNew ? (
                 <Button
-                    bg="#96B6C5"
+                    bg="#b8cde6"
                     leftIcon={<Icon as={AntDesign} name="save" size="lg" />}
                     onPress={handleSubmit}
                     colorScheme="teal"

@@ -85,13 +85,13 @@ export default function HomeScreen() {
           fromZero={true}
           yAxisLabel="$"
           chartConfig={{
-            backgroundColor: "#D5F0C1",
+            backgroundColor: "#eaf4fc",
             backgroundGradientToOpacity: "0.5",
-            backgroundGradientFrom: "#96B6C5",
-            backgroundGradientTo: "#5F5D9C",
+            backgroundGradientFrom: "#fff1cf",
+            backgroundGradientTo: "#7ebeab",
             decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+            color: (opacity = 1) => `rgba(56, 62, 86, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(80, 109, 132, ${opacity})`,
             style: {
               borderRadius: 16
             },
@@ -114,17 +114,17 @@ export default function HomeScreen() {
           <VStack space={4} alignItems="center">
           {summarys.length > 0 ? (
             summarys.map((data, index) => (
-              <Pressable isLoading={isLoading} onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#B3C8CF" p="4" rounded="md" shadow={1}>
+              <Pressable isLoading={isLoading} onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#b2cbe4" borderColor="#bbe2f1" p="4" rounded="lg" shadow={2}>
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
                     <HStack alignItems="center" space={3} justifyContent="space-between">
-                      <Icon as={MaterialIcons} name="calendar-today" size="sm" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="calendar-today" size="md" color="#ffffff" />
                       <Text style={[styles.summaryText, globalStyles.text]}>Year: {data.year}</Text>
-                      <Icon as={MaterialIcons} name="calendar-month" size="sm" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="calendar-month" size="md" color="#ffffff" />
                       <Text style={[styles.summaryText, globalStyles.text]}>Month: {data.month.toString().padStart(2, '0')}</Text>
                     </HStack>
                     <HStack alignItems="center">
-                      <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="attach-money" size="md" color="#ffffff" />
                       <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount.toFixed(2)}</Text>
                     </HStack>
                   </VStack>

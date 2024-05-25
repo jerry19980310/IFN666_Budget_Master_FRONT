@@ -123,23 +123,23 @@ export default function HistoryScreen() {
         <VStack space={4} w="90%" maxW="400px" mx="auto" alignItems="center">
           {filterTransactions.length > 0 ? (
             filterTransactions.map(transaction => (
-              <Box key={transaction.ID} p="4" pt={3} pb={3} bg="#B3C8CF" rounded="md" shadow={2} mb={1} w="100%">
+              <Box key={transaction.ID} p="4" pt={3} pb={3} bg="#b8cde6" rounded="lg" shadow={2} w="100%">
                 <HStack justifyContent="space-between" alignItems="center">
                   <VStack space={2} w="70%">
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="date-range" size="lg" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="date-range" size="lg" color="#ffffff" />
                       <Text style={[styles.summaryText, globalStyles.text]}>{dayjs(transaction.date).format("YYYY/MM/DD")}</Text>
                     </HStack>
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="category" size="lg" color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="category" size="lg" color="#ffffff" />
                       <Text style={[styles.categoryText, globalStyles.text]}>{transaction.category}</Text>
                     </HStack>
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="attach-money" size="lg"  color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="attach-money" size="lg"  color="#ffffff" />
                       <Text style={[styles.amountText, globalStyles.text]}>${transaction.amount.toFixed(2)}</Text>
                     </HStack>
                     <HStack alignItems="center" space={2}>
-                      <Icon as={MaterialIcons} name="note" size="lg"  color="#EEE0C9" />
+                      <Icon as={MaterialIcons} name="note" size="lg"  color="#ffffff" />
                       <Text style={[styles.summaryText, globalStyles.text]}>{transaction.note}</Text>
                     </HStack>
                   </VStack>

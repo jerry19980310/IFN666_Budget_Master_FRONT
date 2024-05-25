@@ -173,16 +173,18 @@ export default function CategoryScreen() {
     return (
       // style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]}
       <Box rounded="md" style={[styles.item, { width: itemWidth, marginLeft: isOddItem ? 8 : 0 }]} >
-    {/* <Box  flex={0.5} mb={1} bg="#96B6C5" shadow={2} rounded="md" w="50" h={70} justifyContent="center" alignItems="space-between" m={1}> */}
-      <HStack justifyContent="center" alignItems="center" w="100%">
-        <Text style={[globalStyles.text, { flex: 1 }]}>{item.name}</Text>
-        <IconButton p={3}
+      <HStack justifyContent="space-between" alignItems="center" w="100%">
+        <Text style={[globalStyles.text, { flexShrink: 1 }]}>
+          {index + 1}. {item.name}
+        </Text>
+        <IconButton
+          p={1}
           icon={<Icon as={AntDesign} name="delete" size="sm" color="#A91D3A" />}
           onPress={() => { setCategoryID(item.ID); setIsDelete(true); }}
         />
       </HStack>
     </Box>
-    )
+  );
 
   };
   
@@ -201,7 +203,7 @@ export default function CategoryScreen() {
           <Button
             bg="#96B6C5"
             colorScheme="teal"
-            leftIcon={<Icon as={Ionicons} name="add-circle-outline" size="sm" color="#EEE0C9" />}
+            leftIcon={<Icon as={Ionicons} name="add-circle-outline" size="sm" color="#ffffff" />}
             onPress={() => { setIsCreate(true); setCategoryName(categoryName); }}
             isLoading={isLoading}
           >
@@ -235,7 +237,7 @@ export default function CategoryScreen() {
       paddingBottom: 10,  // 增加底部的間隔
     },
     item: {
-      backgroundColor: '#96B6C5',
+      backgroundColor: '#cbb3e6',
       padding: 10,
       marginVertical: 6,
       justifyContent: 'center',

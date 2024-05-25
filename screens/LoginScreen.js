@@ -86,7 +86,7 @@ const LoginScreen = () => {
       setUserName('');
       setPassword('');
     } catch (error) {
-      console.log('Error posting data:', error);
+      console.log('Error posting data:', error.response?.data?.message || 'Cannot connect to database. Please try again later.');
       toast.show({
         render: () => (
           <MyAlert title="Login Failed" description={error.response?.data?.message || 'Cannot connect to database. Please try again later.'} variant="left-accent" status="error" />

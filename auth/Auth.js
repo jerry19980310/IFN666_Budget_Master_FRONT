@@ -15,10 +15,9 @@ const handleInitialCategory = async () => {
     const categories = await fetchCategory();
     if (categories.length === 0) {
       await initialCategory();
-      console.log("Initial Category Created");
     }
   } catch (error) {
-    console.error("Error fetching data: ", error.response.data.message);
+    //Error handling is done in fetchCategory
   }
 };
 

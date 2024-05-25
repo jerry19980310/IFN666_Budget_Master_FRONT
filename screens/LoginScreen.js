@@ -37,6 +37,8 @@ const LoginScreen = () => {
     async function check() {
       const isExpire = await CheckExp();
       if (isExpire) {
+        setUserName('');
+        setPassword('');
         navigation.navigate('Login');
         return;
       } else {
@@ -97,7 +99,7 @@ const LoginScreen = () => {
               style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={() => login(userName, password, toast, navigation, setLoading)} style={styles.button} _text={globalStyles.text} isLoading={loading} >Login</Button>
+              <Button onPress={() => login(userName, password, navigation, setLoading)} style={styles.button} _text={globalStyles.text} isLoading={loading} >Login</Button>
               <Button onPress={() => navigation.navigate('SignUp')} style={styles.button} _text={globalStyles.text}>Sign Up</Button>
             </View>
           </Stack>

@@ -41,7 +41,7 @@ const SignUpScreen = ({ navigation }) => {
               style={globalStyles.text}
             />
             <View style={styles.buttonContainer}>
-              <Button onPress={() => signup(userName, password, toast, navigation, setLoading)} style={styles.button} _text={globalStyles.text} isLoading={loading}>Sign Up</Button>
+              <Button onPress={() => signup(userName, password, navigation, setLoading)} style={styles.button} _text={globalStyles.text} isLoading={loading}>Sign Up</Button>
               <Button onPress={() => navigation.navigate('Login')} style={styles.button} _text={globalStyles.text}>Login</Button>
             </View>
           </Stack>

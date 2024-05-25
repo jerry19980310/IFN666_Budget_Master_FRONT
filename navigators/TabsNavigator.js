@@ -20,7 +20,6 @@ const TabsNavigator = () => {
   const fetchUserName = async () => {
     const userName = await AsyncStorage.getItem("username");
     setUserName(userName);
-    console.log(userName);
   };
 
   fetchUserName();

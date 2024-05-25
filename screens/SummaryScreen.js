@@ -4,13 +4,14 @@ import { useRoute } from '@react-navigation/native';
 import { Box, Center, HStack, ScrollView, VStack, Icon } from "native-base";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
-import Checkexp from '../components/CheckExp';
+import { useTranslation } from 'react-i18next';
 import { GlobalStyles } from '../styles/global';
 import { GlobalLayout } from '../components/Layout';
 import { fetchSummaryCategory } from '../api/ApiController';
 import { PieChart } from 'react-native-chart-kit';
 
 export default function SummaryScreen() {
+  const { t } = useTranslation();
   const route = useRoute();
   const { year, month } = route.params;
   const [datas, setDatas] = useState([]);
@@ -18,10 +19,10 @@ export default function SummaryScreen() {
   const [querymonth, setQueryMonth] = useState(month);
   const [filterDatas, setFilterDatas] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [pieData, setPieData] = useState([]);
   const globalStyles = GlobalStyles();
-  const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
+
 
   const handleFilter = (dataList = datas) => {
     const filtered = dataList.filter(summary =>
@@ -103,24 +104,6 @@ export default function SummaryScreen() {
   };
   
 
-  // const generateRandomPastelColor = () => {
-  //   const pastelColors = [
-  //     "#ff9e9e",	
-  //     "#ff9ece",
-  //     "#ff9eff",	
-  //     "#ce9eff",	
-  //     "#9e9eff",
-  //     "#9eceff",
-  //     "#9effff",	
-  //     "#9effce",
-  //     "#9eff9e",	
-  //     "#ceff9e",	
-  //     "#ffff9e",
-  //     "#ffce9e",
-  //   ];
-  //   return pastelColors[Math.floor(Math.random() * pastelColors.length)];
-  // };
-
   const generateColors = (num) => {
     const colors = [];
     for (let i = 0; i < num; i++) {
@@ -167,7 +150,7 @@ export default function SummaryScreen() {
       </VStack>
 
       <Center m="3">
-        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Total: $ {totalAmount} AUD</Text>
+        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>{t('total')}: $ {totalAmount} AUD</Text>
       </Center>
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -178,12 +161,12 @@ export default function SummaryScreen() {
                 <HStack justifyContent="space-between">
                   <VStack space={2}>
                     <HStack alignItems="center">
-                      <Icon as={MaterialCommunityIcons} name="tag-outline" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.categoryText, globalStyles.text]}>Category: {data.category}</Text>
+                      <Icon as={MaterialCommunityIcons} name="tag-outline" size="lg" color="#EEE0C9" />
+                      <Text style={[styles.categoryText, globalStyles.text]}>{t('category')}: {data.category}</Text>
                     </HStack>
                     <HStack alignItems="center">
-                      <Icon as={MaterialIcons} name="attach-money" size="sm" color="#EEE0C9" />
-                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount.toFixed(2)}</Text>
+                      <Icon as={MaterialIcons} name="attach-money" size="lg" color="#EEE0C9" />
+                      <Text style={[styles.amountText, globalStyles.text]}>{t('amount')}: ${data.amount.toFixed(2)}</Text>
                     </HStack>
                   </VStack>
                 </HStack>

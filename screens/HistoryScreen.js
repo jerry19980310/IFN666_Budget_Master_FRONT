@@ -1,4 +1,3 @@
-// HistoryScreen.js
 import { Text, StyleSheet } from "react-native";
 import dayjs from "dayjs";
 import { useState, useEffect, useCallback } from "react";
@@ -11,8 +10,10 @@ import Checkexp from "../components/CheckExp";
 import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
 import { fetchTransaction, deleteTransaction } from "../api/ApiController";
+import { useTranslation } from 'react-i18next';
 
 export default function HistoryScreen() {
+  const { t } = useTranslation();
   const [dataTransactions, setDataTransactions] = useState([]);
   const [filterTransactions, setFilterTransactions] = useState([]);
   const [transactionID, setTransactionID] = useState(0);
@@ -61,10 +62,6 @@ export default function HistoryScreen() {
     setFilterTransactions(filtered);
   };
 
-  // useEffect(() => {
-  //   loadTransactions();
-  // }, []);
-
   useEffect(() => {
     if (isDelete) {
       handleDeleteTransaction();
@@ -102,7 +99,7 @@ export default function HistoryScreen() {
         <Input
           w="45%"
           variant="outline"
-          placeholder="Year"
+          placeholder={t('year')}
           onChangeText={v => setYear(v)}
           value={year}
           keyboardType='numeric'
@@ -111,7 +108,7 @@ export default function HistoryScreen() {
         <Input
           w="45%"
           variant="outline"
-          placeholder="Month"
+          placeholder={t('month')}
           onChangeText={v => setMonth(v)}
           value={month}
           keyboardType='numeric'
@@ -157,7 +154,7 @@ export default function HistoryScreen() {
               </Box>
             ))
           ) : (
-            <Text style={[styles.summaryText, globalStyles.text]}>No transactions found for the selected year and month.</Text>
+            <Text style={[styles.summaryText, globalStyles.text]}>{t('no_transaction')}</Text>
           )}
         </VStack>
       </ScrollView>

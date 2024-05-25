@@ -9,13 +9,15 @@ import HoneScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import { AntDesign } from '@expo/vector-icons';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Tab = createBottomTabNavigator();
 
 const TabsNavigator = () => {
 
     const [userName, setUserName] = useState('');
-
+    const { t } = useTranslation();
+    
     const fetchUserName = async () => {
       const userName = await AsyncStorage.getItem('username');
       setUserName(userName);

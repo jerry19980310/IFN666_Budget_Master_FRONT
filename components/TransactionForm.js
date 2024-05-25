@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { AntDesign } from '@expo/vector-icons';
 import MyAlert from "./MyAlert";
 import { GlobalStyles } from '../styles/global';
+import { useTranslation } from 'react-i18next';
 
 export default function TransactionForm({ initialData, onSubmit, categories, isNew }) {
     const [category, setCategory] = useState(initialData.category || '');
@@ -15,6 +16,7 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
     const [showPicker, setShowPicker] = useState(false);
     const toast = useToast();
     const globalStyles = GlobalStyles();
+    const { t } = useTranslation();
 
     const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -45,12 +47,12 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
     return (
         <VStack space={4} w="90%" maxW="400px">
             <Box mt={3} pt={2}>
-                <Heading size="md" mb={1} pt={3} style={globalStyles.heading}>Amount</Heading>
+                <Heading size="md" mb={1} pt={3} style={globalStyles.heading}>{t('amount')}</Heading>
                 <InputGroup>
                     <InputLeftAddon children={"$"} />
                     <Input
                         w="80%"
-                        placeholder="Enter amount"
+                        placeholder={t('enter_amount')}
                         onChangeText={v => setMoney(v)}
                         value={money}
                         keyboardType="numeric"
@@ -61,12 +63,12 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
             </Box>
 
             <Box >
-                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>Category</Heading>
+                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>{t('category')}</Heading>
                 <Select
                     selectedValue={category}
                     minWidth="200"
                     accessibilityLabel="Choose Category"
-                    placeholder="Choose Category"
+                    placeholder={t('choose_category')}
                     _selectedItem={{
                         bg: "teal.600",
                         endIcon: <CheckIcon size="5" />
@@ -82,7 +84,7 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
             </Box>
 
             <Box>
-                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>Date</Heading>
+                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>{t('date')}</Heading>
                 <Button
                     variant="outline"
                     onPress={() => setShowPicker(true)}
@@ -100,10 +102,10 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
             </Box>
 
             <Box>
-                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>Note</Heading>
+                <Heading size="md" mb={1} pt={1} style={globalStyles.heading}>{t('note')}</Heading>
                 <Input
                     variant="outline"
-                    placeholder="Enter note"
+                    placeholder={t('enter_note')}
                     onChangeText={v => setNote(v)}
                     value={note}
                     style={globalStyles.text}
@@ -118,17 +120,17 @@ export default function TransactionForm({ initialData, onSubmit, categories, isN
                     colorScheme="teal"
                     mt={4}
                 >
-                    <Text style={globalStyles.text}>Save</Text>
+                    <Text style={globalStyles.text}>{t('save')}</Text>
                 </Button>
             ) : (
                 <Button
-                    bg="#96B6C5"
+                    bg="#b8cde6"
                     leftIcon={<Icon as={AntDesign} name="clouduploado" size="lg" />}
                     onPress={handleSubmit}
                     colorScheme="teal"
                     mt={4}
                 >
-                    <Text style={globalStyles.text}>Update</Text>
+                    <Text style={globalStyles.text}>{t('update')}</Text>
                 </Button>
             )}
         </VStack>

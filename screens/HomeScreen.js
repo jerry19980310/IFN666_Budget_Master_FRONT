@@ -8,9 +8,12 @@ import Checkexp from "../components/CheckExp";
 import { fetchSummaryYearMonth } from "../api/ApiController";
 import { MaterialIcons } from '@expo/vector-icons';
 import { BarChart } from "react-native-chart-kit";
-
+import { useTranslation } from 'react-i18next';
+import '../locales/i18next';
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
+
   const [summarys, setSummarys] = useState([]);
   const [barChartData, setBarChartData] = useState({
     labels: [],
@@ -43,7 +46,7 @@ export default function HomeScreen() {
 
     } catch (error) {
       // Error handling is already done in fetchSummaryYearMonth
-    }finally{
+    } finally {
       setIsLoading(false);
     }
   };
@@ -73,7 +76,6 @@ export default function HomeScreen() {
     }
 
   }, [isPress]);
-
 
   return (
     <GlobalLayout>
@@ -107,33 +109,33 @@ export default function HomeScreen() {
         />
       </VStack>
       <Center m="2" >
-        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>Details</Text>
+        <Text fontSize="2xl" bold style={[styles.summaryText, globalStyles.text]}>{t('details')}</Text>
       </Center>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <VStack space={4} w="90%" maxW="400px" mx="auto">
           <VStack space={4} alignItems="center">
-          {summarys.length > 0 ? (
-            summarys.map((data, index) => (
-              <Pressable isLoading={isLoading} onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#b2cbe4" borderColor="#bbe2f1" p="4" rounded="lg" shadow={2}>
-                <HStack justifyContent="space-between">
-                  <VStack space={2}>
-                    <HStack alignItems="center" space={3} justifyContent="space-between">
-                      <Icon as={MaterialIcons} name="calendar-today" size="md" color="#ffffff" />
-                      <Text style={[styles.summaryText, globalStyles.text]}>Year: {data.year}</Text>
-                      <Icon as={MaterialIcons} name="calendar-month" size="md" color="#ffffff" />
-                      <Text style={[styles.summaryText, globalStyles.text]}>Month: {data.month.toString().padStart(2, '0')}</Text>
-                    </HStack>
-                    <HStack alignItems="center">
-                      <Icon as={MaterialIcons} name="attach-money" size="md" color="#ffffff" />
-                      <Text style={[styles.amountText, globalStyles.text]}>Amount: ${data.amount.toFixed(2)}</Text>
-                    </HStack>
-                  </VStack>
-                </HStack>
-              </Pressable>
-            )
-          )) : (
-            <Text style={[globalStyles.text]}>Click Transaction button to create your first transaction</Text> )
-        }
+            {summarys.length > 0 ? (
+              summarys.map((data, index) => (
+                <Pressable isLoading={isLoading} onPress={() => { setYear(data.year); setMonth(data.month); setIsPress(true) }} key={index} w="100%" bg="#b2cbe4" borderColor="#bbe2f1" p="4" rounded="lg" shadow={2}>
+                  <HStack justifyContent="space-between">
+                    <VStack space={2}>
+                      <HStack alignItems="center" space={3} justifyContent="space-between">
+                        <Icon as={MaterialIcons} name="calendar-today" size="md" color="#ffffff" />
+                        <Text style={[styles.summaryText, globalStyles.text]}>{t('year')}: {data.year}</Text>
+                        <Icon as={MaterialIcons} name="calendar-month" size="md" color="#ffffff" />
+                        <Text style={[styles.summaryText, globalStyles.text]}>{t('month')}: {data.month.toString().padStart(2, '0')}</Text>
+                      </HStack>
+                      <HStack alignItems="center">
+                        <Icon as={MaterialIcons} name="attach-money" size="md" color="#ffffff" />
+                        <Text style={[styles.amountText, globalStyles.text]}>{t('amount')}: ${data.amount.toFixed(2)}</Text>
+                      </HStack>
+                    </VStack>
+                  </HStack>
+                </Pressable>
+              ))
+            ) : (
+              <Text style={[globalStyles.text]}>{t('click_transaction')}</Text>
+            )}
           </VStack>
         </VStack>
       </ScrollView>

@@ -8,8 +8,10 @@ import Checkexp from "../components/CheckExp";
 import { createCategory, deleteCategory, initialCategory, fetchCategory } from "../api/ApiController";
 import { GlobalStyles } from "../styles/global";
 import MyAlert from "../components/MyAlert";
+import { useTranslation } from 'react-i18next';
 
 export default function CategoryScreen() {
+  const { t } = useTranslation();
   const [dataCategory, setDataCategories] = useState([]);
   const [isCreate, setIsCreate] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
@@ -195,7 +197,7 @@ export default function CategoryScreen() {
           <Input
             flex={1}
             variant="outline"
-            placeholder="Enter a new category"
+            placeholder={t('enter_category')}
             onChangeText={v => setCategoryName(v)}
             value={categoryName}
             style={globalStyles.text}
@@ -207,7 +209,7 @@ export default function CategoryScreen() {
             onPress={() => { setIsCreate(true); setCategoryName(categoryName); }}
             isLoading={isLoading}
           >
-            <Text style={globalStyles.text}>New</Text>
+            <Text style={globalStyles.text}>{t('new')}</Text>
           </Button>
         </HStack>
         

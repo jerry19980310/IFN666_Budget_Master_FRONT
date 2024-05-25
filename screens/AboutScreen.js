@@ -5,10 +5,13 @@ import { GlobalStyles } from "../styles/global";
 import { GlobalLayout } from "../components/Layout";
 import { Center, ScrollView, VStack, HStack, Box, Icon } from "native-base";
 import { MaterialIcons } from '@expo/vector-icons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
 
 export default function AboutPage() {
 
   const globalStyles = GlobalStyles();
+  const { t } = useTranslation();
 
   const Link = ({ url, style, children }) => (
     <Text
@@ -27,17 +30,15 @@ export default function AboutPage() {
   return (
 
     <GlobalLayout>
-      <HStack space={3} justifyContent="center" mb="4">
-        <Center flex={1} px="3" mt="4">
-          <Text style={[globalStyles.heading]}>Budget Master</Text>
-          <Center>
-            <Text style={[globalStyles.text]}>A comprehensive budget management application designed to help users efficiently track and manage their expenses. With intuitive tools for setting financial goals, monitoring spending patterns, and generating detailed reports.</Text>
-          </Center>
+      <HStack space={3} justifyContent="center" mb="2">
+        <Center flex={1} px="2">
+          <Text style={[globalStyles.heading]}>{t('budget_master')}</Text>
+          <Text style={[globalStyles.text]}>{t('intro')}</Text>
         </Center>
       </HStack>
-      <HStack space={3} justifyContent="center" mb="4">
-      <Center flex={1} px="3" mt="4">
-          <Text style={[globalStyles.heading]}>Open licence</Text>
+      <HStack space={3} justifyContent="center" mb="3">
+      <Center flex={1} px="2" mt="3">
+          <Text style={[globalStyles.heading]}>{t('open_licence')}</Text>
         </Center>
 
       </HStack>
@@ -48,7 +49,7 @@ export default function AboutPage() {
               <HStack justifyContent="space-between" alignItems="center">
                 <VStack space={2} w="70%">
                   <HStack alignItems="center" space={2}>
-                    <Icon as={MaterialIcons} name="date-range" size="md" color="#EEE0C9" />
+                    <Icon as={MaterialCommunityIcons} name="license" size="md" color="#EEE0C9" />
                     <Text style={[globalStyles.text, styles.text]}>{licence.packageName}</Text>
                   </HStack>
                   <HStack alignItems="center" space={2}>
@@ -56,7 +57,7 @@ export default function AboutPage() {
                     <Text style={[globalStyles.text, { color: '#f2f2b0' } ]}>{licence.packageInfo.licenses}</Text>
                   </HStack>
                   <HStack alignItems="center" space={2}>
-                    <Icon as={MaterialIcons} name="attach-money" size="md" color="#EEE0C9" />
+                    <Icon as={MaterialIcons} name="link" size="md" color="#EEE0C9" />
                     <Link url={licence.packageInfo.licenseUrl} style={styles.link}>{licence.packageInfo.licenseUrl}</Link>
                   </HStack>
                 </VStack>

@@ -7,7 +7,7 @@ export function GlobalStyles() {
 
   const styles = StyleSheet.create({
     text: {
-      fontSize: isLargeText ? 22 : 16,
+      fontSize: isLargeText ? 24 : 16,
       fontWeight : isBoldText ? "bold" : "normal",
     },
     heading: {

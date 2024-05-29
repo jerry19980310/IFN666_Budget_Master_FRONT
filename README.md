@@ -62,23 +62,22 @@ Budget Master is built using a modular architecture to ensure scalability and ma
 
 PROGRAM/
 ├── IFN666_A3_BACK
-│ ├── docs/ # openapi
-│ ├── routes/ # index, users
-│ ├── app.js # Entry point for the server app
-│ ├── db.js #connect to MySQL
-│ ├── package.json # Project configuration
-├── IFN666_A3_BACK
-│ ├── assets/ # Asset files (images, fonts, etc.)
-│ ├── components/ # Reusable UI components
-│ ├── auth/ # auth login express and login or sign up
-│ ├── components/ # Reusable UI components
-│ ├── screens/ # Application screens
-│ ├── navigation/ # Navigation configuration
-│ ├── context/ # handle global theme
-│ ├── functions/ # handle call API 
-│ ├── locales/ # for different language
-│ ├── app.js # Entry point for the Expo app
-└ ├── package.json # Project configuration
+│   ├── docs/                # OpenAPI documentation
+│   ├── routes/              # Route handlers (index, users)
+│   ├── app.js               # Entry point for the server app
+│   ├── db.js                # Connect to MySQL
+│   └── package.json         # Project configuration
+└── IFN666_A3_FRONT
+    ├── assets/              # Asset files (images, fonts, etc.)
+    ├── components/          # Reusable UI components
+    ├── auth/                # Authentication logic (login, signup)
+    ├── screens/             # Application screens
+    ├── navigation/          # Navigation configuration
+    ├── context/             # Global state management (theme)
+    ├── functions/           # API call handling
+    ├── locales/             # Localization files for different languages
+    └── app.js               # Entry point for the Expo app
+
 
 ## Contributing
 

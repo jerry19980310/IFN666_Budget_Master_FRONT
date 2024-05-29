@@ -4,7 +4,7 @@ import { NativeBaseProvider } from 'native-base';
 import StackNavigator from "./navigators/StackNavigator";
 import { LogBox } from 'react-native';
 
-// LogBox.ignoreAllLogs();
+LogBox.ignoreAllLogs();
 
 export default function App() {
 

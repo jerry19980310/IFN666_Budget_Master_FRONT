@@ -16,23 +16,20 @@ const resources = {
 
 const getLanguage = async () => {
   const storedLang = await AsyncStorage.getItem('language');
-  console.log("storedLang", storedLang);
   return storedLang || Localization.getLocales()[0].languageCode;
 };
 
 getLanguage().then((lang) => {
 
-  console.log("lang", lang);
-
-i18n.use(initReactI18next).init({
-  compatibilityJSON: 'v3',
-  resources,
-  fallbackLng: "en",
-  lng: lang,
-  interpolation: {
-    escapeValue: false,
-  },
-});
+  i18n.use(initReactI18next).init({
+    compatibilityJSON: 'v3',
+    resources,
+    fallbackLng: "en",
+    lng: lang,
+    interpolation: {
+      escapeValue: false,
+    },
+  });
 
 });
 

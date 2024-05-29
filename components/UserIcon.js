@@ -53,6 +53,7 @@ const UserIcon = ({ userName }) => {
                             Hi, {userName}
                         </Text>
                     </Box>
+                    <Divider mt={2} mb={2} />
                     <Actionsheet.Item onPress={handleAbout}>{t('about')}</Actionsheet.Item>
                     <Actionsheet.Item onPress={handleLogout}>{t('logout')}</Actionsheet.Item>
                     <Divider mt={2} mb={2} />

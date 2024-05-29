@@ -30,15 +30,15 @@ const TabsNavigator = () => {
         return {
           tabBarIcon: ({ color, size }) => {
             let iconName;
-            if (route.name === "Home") {
+            if (route.name === t('home')) {
               iconName = "home";
-            } else if (route.name === "Settings") {
+            } else if (route.name === t('settings')) {
               iconName = "setting";
-            } else if (route.name === "Category") {
+            } else if (route.name === t('category')) {
               iconName = "book";
-            } else if (route.name === "Transaction") {
+            } else if (route.name === t('transaction')) {
               iconName = "plus";
-            } else if (route.name === "History") {
+            } else if (route.name === t('history')) {
               iconName = "calendar";
             }
             return <AntDesign name={iconName} size={size} color={color} />;
@@ -48,35 +48,35 @@ const TabsNavigator = () => {
       }}
     >
       <Tab.Screen
-        name="Home"
+        name={t('home')}
         component={HoneScreen}
         options={{
           headerRight: () => <UserIcon userName={userName} />,
         }}
       />
       <Tab.Screen
-        name="Transaction"
+        name={t('transaction')}
         component={AddTransactionScreen}
         options={{
           headerRight: () => <UserIcon userName={userName} />,
         }}
       />
       <Tab.Screen
-        name="History"
+        name={t('history')}
         component={HistoryScreen}
         options={{
           headerRight: () => <UserIcon userName={userName} />,
         }}
       />
       <Tab.Screen
-        name="Category"
+        name={t('category')}
         component={CategoryScreen}
         options={{
           headerRight: () => <UserIcon userName={userName} />,
         }}
       />
       <Tab.Screen
-        name="Settings"
+        name={t('settings')}
         component={SettingsScreen}
         options={{
           headerRight: () => <UserIcon userName={userName} />,

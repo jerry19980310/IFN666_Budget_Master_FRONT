@@ -108,7 +108,8 @@ PROGRAM/
     ├── context/             # Global state management (theme)
     ├── functions/           # API call handling
     ├── locales/             # Localization files for different languages
-    └── app.js               # Entry point for the Expo app
+    ├── app.js               # Entry point for the Expo app
+    └── package.json         # Project configuration
 ```
 
 

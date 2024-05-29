@@ -15,14 +15,13 @@ const handleInitialCategory = async () => {
     const categories = await fetchCategory();
     if (categories.length === 0) {
       await initialCategory();
-      console.log("Initial Category Created");
     }
   } catch (error) {
-    console.error("Error fetching data: ", error.response.data.message);
+    //Error handling is done in fetchCategory
   }
 };
 
-export const login = async (userName, password, navigation, setLoading) => {
+export const login = async (userName, password, navigation, setLoading, setUserName, setPassword) => {
   if (!userName || !password) {
     Toast.show({
       render: () => (
@@ -53,6 +52,9 @@ export const login = async (userName, password, navigation, setLoading) => {
 
     await handleInitialCategory();
 
+    setUserName('');
+    setPassword('');
+
     navigation.navigate('Tabview');
 
     const Name = decode.tokenPayload.username.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
@@ -65,6 +67,7 @@ export const login = async (userName, password, navigation, setLoading) => {
       placement: "top"
     });
   } catch (error) {
+    const e = error
     Toast.show({
       render: () => (
         <MyAlert title="Login Failed" description={error.response?.data?.message || 'Cannot connect to database. Please try again later.'} variant="left-accent" status="error" />

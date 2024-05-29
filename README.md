@@ -60,6 +60,7 @@ Budget Master is built using a modular architecture to ensure scalability and ma
 
 ### Folder Structure
 
+``` bosh
 PROGRAM/
 ├── IFN666_A3_BACK
 │   ├── docs/                # OpenAPI documentation
@@ -77,6 +78,7 @@ PROGRAM/
     ├── functions/           # API call handling
     ├── locales/             # Localization files for different languages
     └── app.js               # Entry point for the Expo app
+```
 
 
 ## Contributing

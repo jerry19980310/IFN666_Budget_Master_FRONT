@@ -23,6 +23,36 @@ Ensure you have the following installed on your system:
 - [npm](https://www.npmjs.com/)
 - [Expo CLI](https://docs.expo.dev/get-started/installation/)
 
+### Project Dependencies
+
+- @react-native-async-storage/async-storage
+- @react-native-community/datetimepicker
+- @react-navigation/bottom-tabs
+- @react-navigation/native
+- @react-navigation/stack
+- axios
+- core-js
+- dayjs
+- expo-crypto
+- expo-linear-gradient
+- expo-splash-screen
+- expo-status-bar
+- expo
+- jsonwebtoken
+- jwt-decode
+- native-base
+- npm-license-crawler
+- react-native-gesture-handler
+- react-native-gifted-charts
+- react-native-linear-gradient
+- react-native-pie-chart
+- react-native-safe-area-context
+- react-native-screens
+- react-native-svg
+- react-native-tab-view
+- react-native
+- react
+
 ### Installation
 
 1. Clone the repository:
@@ -48,6 +78,7 @@ Ensure you have the following installed on your system:
     ```
 
 5. Open the Expo Go app on your mobile device and scan the QR code displayed in the terminal or browser to see the app in action.
+
 
 ## Application Architecture
 

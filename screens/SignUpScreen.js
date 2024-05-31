@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ImageBackground, Alert } from 'react-native';
-import { Input, Icon, Stack, Box, Pressable, Button, useToast } from 'native-base';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
+import { Input, Icon, Stack, Box, Pressable, Button } from 'native-base';
 import { MaterialIcons } from "@expo/vector-icons";
 import { GlobalStyles } from "../styles/global";
 import { signup } from '../auth/Auth';
@@ -10,7 +10,6 @@ const SignUpScreen = ({ navigation }) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const globalStyles = GlobalStyles();
-  const toast = useToast();
   const [loading, setLoading] = useState(false);
 
   return (

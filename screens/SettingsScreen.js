@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import { Text, Switch, View, StyleSheet } from "react-native";
-import { Select, CheckIcon, Center, VStack, HStack } from "native-base";
+import { Text, Switch } from "react-native";
+import { Select, CheckIcon, VStack, HStack } from "native-base";
 import { GlobalLayout } from "../components/Layout";
 import { useMyTheme } from "../context/mytheme";
 import { GlobalStyles } from "../styles/global";
@@ -89,9 +89,3 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  view: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});

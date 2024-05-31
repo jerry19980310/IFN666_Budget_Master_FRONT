@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useState } from "react";
 import { Center, useToast } from "native-base";
 import { useNavigation, useFocusEffect } from '@react-navigation/native';

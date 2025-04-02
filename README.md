@@ -44,6 +44,7 @@ The purpose of Budget Master is to provide users with an easy-to-use platform to
 
 
 - **Category View**:
+
 ![Category](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/Category.png)
 
 

@@ -20,21 +20,26 @@ The purpose of Budget Master is to provide users with an easy-to-use platform to
 ![Login](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/Login.png)
 
 - **Sign Up View**:
+
 ![SignUp](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/SignUp.png)
 
 - **Home Up View**:
+
 ![Home](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/Home.png)
 
 
 - **Transaction View**:
+
 ![Transaction](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/Transaction.png)
 
 
 - **Monthly Detail View**:
+
 ![Detail](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/Detail.png)
 
 
 - **History View**:
+
 ![History](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/History.png)
 
 
@@ -43,14 +48,17 @@ The purpose of Budget Master is to provide users with an easy-to-use platform to
 
 
 - **Setting View**:
+
 ![Setting](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/Setting.png)
 
 
 - **User Icon View**:
+
 ![UserIcon](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/UserIcon.png)
 
 
 - **About View**:
+
 ![About](https://raw.githubusercontent.com/jerry19980310/Project-Demo/refs/heads/main/BudgetMaster/About.png)
 
 
